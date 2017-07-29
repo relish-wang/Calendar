@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="wang.relish.datepicker.sample.MainActivity">
+
+    <TextView
+        android:id="@+id/tv_picker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#BBBBBB"
+        android:gravity="center_horizontal"
+        android:padding="16dp"
+        android:text="开始日期 - 结束日期"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp" />
+</LinearLayout>
