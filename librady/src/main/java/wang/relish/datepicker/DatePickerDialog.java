@@ -1,28 +1,23 @@
 package wang.relish.datepicker;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,19 +25,11 @@ import java.security.InvalidParameterException;
 import java.util.Calendar;
 
 /**
- * 日期选择器弹窗(全屏)
- * Created by 王鑫 on 2017/3/16.
+ * @author Relish Wang
+ * @since 2017/07/31
  */
-public class DatePickerDialog extends DialogFragment implements View.OnClickListener,
+public class DatePickerDialog extends Dialog implements View.OnClickListener,
         DatePickerAdapter.OnDateSelectedChangedListener {
-
-    private static final String MIN_YEAR = "min_year";
-    private static final String MIN_MONTH = "min_month";
-    private static final String MIN_DAY = "min_day";
-    private static final String MAX_YEAR = "max_year";
-    private static final String MAX_MONTH = "max_month";
-    private static final String MAX_DAY = "max_day";
-
     /**
      * 被选择的开始日期-结束日期
      */
@@ -101,7 +88,7 @@ public class DatePickerDialog extends DialogFragment implements View.OnClickList
     /**
      * 日期选择监听器
      */
-    private OnDateSelectedListener mListener;
+    private DatePickerDialog.OnDateSelectedListener mListener;
 
     /**
      * 日历的适配器
@@ -113,7 +100,7 @@ public class DatePickerDialog extends DialogFragment implements View.OnClickList
      *
      * @return DatePickerDialog
      */
-    public static DatePickerDialog newInstance() {
+    public static DatePickerDialog newInstance(Context context) {
         Calendar calendar = Calendar.getInstance();
         int maxYear = calendar.get(Calendar.YEAR);
         int maxMonth = calendar.get(Calendar.MONTH) + 1;
@@ -121,7 +108,7 @@ public class DatePickerDialog extends DialogFragment implements View.OnClickList
         // 存在一个很小概率可能触发的bug：
         // 当前时间为闰年2月29日，减一年后变成非闰年，没有29日！
         int monthDays = Utils.getMonthDays(maxYear - 1, maxMonth);
-        return newInstance(maxYear - 1, maxMonth, nowDay > monthDays ? monthDays : nowDay, maxYear, maxMonth, nowDay);
+        return newInstance(context, maxYear - 1, maxMonth, nowDay > monthDays ? monthDays : nowDay, maxYear, maxMonth, nowDay);
     }
 
     /**
@@ -131,12 +118,12 @@ public class DatePickerDialog extends DialogFragment implements View.OnClickList
      * @param month 结束月
      * @return DatePickerDialog
      */
-    public static DatePickerDialog newInstance(int year, int month) {
+    public static DatePickerDialog newInstance(Context context, int year, int month) {
         if (month < 1 || month > 12) {
             throw new IndexOutOfBoundsException("There is no month called " + month + " on the earth!");
         }
         int monthDays = Utils.getMonthDays(year, month);
-        return newInstance(1970, 1, 1, year, month, monthDays);
+        return newInstance(context, 1970, 1, 1, year, month, monthDays);
     }
 
     /**
@@ -147,9 +134,9 @@ public class DatePickerDialog extends DialogFragment implements View.OnClickList
      * @param maxDay   最大日
      * @return DatePickerDialog
      */
-    public static DatePickerDialog newInstance(int maxYear, int maxMonth, int maxDay) {
+    public static DatePickerDialog newInstance(Context context, int maxYear, int maxMonth, int maxDay) {
         if (Utils.isDayCorrect(maxYear, maxMonth, maxDay)) {
-            return newInstance(1970, 1, 1, maxYear, maxMonth, maxDay);
+            return newInstance(context, 1970, 1, 1, maxYear, maxMonth, maxDay);
         } else {
             throw new IndexOutOfBoundsException(
                     maxYear + "-" + maxMonth + "-" + maxDay + " is not a correct date.");
@@ -165,7 +152,7 @@ public class DatePickerDialog extends DialogFragment implements View.OnClickList
      * @param maxMonth 最大年对应的最大月
      * @return DatePickerDialog
      */
-    public static DatePickerDialog newInstance(int minYear, int minMonth, int maxYear, int maxMonth) {
+    public static DatePickerDialog newInstance(Context context, int minYear, int minMonth, int maxYear, int maxMonth) {
         if (minMonth < 1 || minMonth > 12) {
             throw new IndexOutOfBoundsException("There is no month called " + minMonth + " on the earth!");
         }
@@ -173,7 +160,7 @@ public class DatePickerDialog extends DialogFragment implements View.OnClickList
             throw new IndexOutOfBoundsException("There is no month called " + maxMonth + " on the earth!");
         }
         int monthDays = Utils.getMonthDays(maxYear, maxMonth);
-        return newInstance(minYear, minMonth, 1, maxYear, maxMonth, monthDays);
+        return newInstance(context, minYear, minMonth, 1, maxYear, maxMonth, monthDays);
     }
 
 
@@ -188,7 +175,7 @@ public class DatePickerDialog extends DialogFragment implements View.OnClickList
      * @param maxDay   最大年月对应的最大日
      * @return DatePickerDialog
      */
-    public static DatePickerDialog newInstance(int minYear, int minMonth, int minDay, int maxYear, int maxMonth, int maxDay) {
+    public static DatePickerDialog newInstance(Context context, int minYear, int minMonth, int minDay, int maxYear, int maxMonth, int maxDay) {
         if (!Utils.isDayCorrect(minYear, minMonth, minDay)) {
             throw new IndexOutOfBoundsException(
                     minYear + "-" + minMonth + "-" + minDay + " is not a correct date.");
@@ -198,16 +185,7 @@ public class DatePickerDialog extends DialogFragment implements View.OnClickList
                     maxYear + "-" + maxMonth + "-" + maxDay + " is not a correct date.");
         }
         if ((maxYear > minYear) || (maxYear == minYear && maxMonth > minMonth) || (maxYear == minYear && maxMonth == minMonth && maxDay >= minDay)) {
-            DatePickerDialog dialog = new DatePickerDialog();
-            Bundle bundle = new Bundle();
-            bundle.putInt(MIN_YEAR, minYear);
-            bundle.putInt(MIN_MONTH, minMonth);
-            bundle.putInt(MIN_DAY, minDay);
-            bundle.putInt(MAX_YEAR, maxYear);
-            bundle.putInt(MAX_MONTH, maxMonth);
-            bundle.putInt(MAX_DAY, maxDay);
-            dialog.setArguments(bundle);
-            return dialog;
+            return new DatePickerDialog(context, minYear, minMonth, minDay, maxYear, maxMonth, maxDay);
         } else {
             throw new InvalidParameterException("Minimum date should not later than maximal date：" +
                     minYear + "年" + minMonth + "月" + minDay + "日" +
@@ -216,60 +194,34 @@ public class DatePickerDialog extends DialogFragment implements View.OnClickList
         }
     }
 
+
+    public DatePickerDialog(Context context, int minYear, int minMonth, int minDay, int maxYear, int maxMonth, int maxDay) {
+        super(context, R.style.BottomDialog);
+        mMinYear = minYear;
+        mMinMonth = minMonth;
+        mMinDay = minDay;
+        mMaxYear = maxYear;
+        mMaxMonth = maxMonth;
+        mMaxDay = maxDay;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Light_NoTitleBar_Fullscreen);
+        requestWindowFeature(Window.FEATURE_NO_TITLE); // 设置Content前设定
+        setContentView(R.layout.dialog_date_picker);
+        initViews();
+        setCanceledOnTouchOutside(false);// 点击Dialog外部消失
     }
-
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        // 使用不带Theme的构造器, 获得的dialog边框距离屏幕仍有几毫米的缝隙。
-        Dialog dialog = new Dialog(getActivity(), R.style.BottomDialog);
-
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // 设置Content前设定
-        dialog.setContentView(R.layout.dialog_date_picker);
-        dialog.setCanceledOnTouchOutside(false); // 外部点击取消
-
-        Bundle bundle = getArguments();
-        mMinYear = bundle.getInt(MIN_YEAR);
-        mMinMonth = bundle.getInt(MIN_MONTH);
-        mMinDay = bundle.getInt(MIN_DAY);
-        mMaxYear = bundle.getInt(MAX_YEAR);
-        mMaxMonth = bundle.getInt(MAX_MONTH);
-        mMaxDay = bundle.getInt(MAX_DAY);
-
-        return dialog;
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.dialog_date_picker, container, false);
-        initViews(v);
-        return v;
-    }
-
-    @Override
-    public int show(FragmentTransaction transaction, String tag) {
-        Dialog dialog = getDialog();
-        // 设置宽度为屏宽, 靠近屏幕底部。
-        Window window = dialog.getWindow();
-        if (window != null) {
-            WindowManager.LayoutParams lp = window.getAttributes();
-            lp.gravity = Gravity.BOTTOM; // 紧贴底部
-            lp.width = WindowManager.LayoutParams.MATCH_PARENT; // 宽度持平
-            window.setAttributes(lp);
-            return super.show(transaction, tag);
-        } else {
-            return -1;//不显示Dialog
-        }
-    }
-
 
     @SuppressWarnings("deprecation")
-    private void initViews(View v) {
+    private void initViews() {
+
+        RelativeLayout titleBar = (RelativeLayout) findViewById(R.id.title_bar);
+        tvCancel = (TextView) findViewById(R.id.tv_cancel);
+        tvComplete = (TextView) findViewById(R.id.tv_complete);
+        tvDayCount = (TextView) findViewById(R.id.tv_day_count);
+
         mYearTextSize = mYearTextSize == 0 ? Utils.dp2px(getContext(), MonthStyle.YEAR_TEXT_SIZE) : mYearTextSize;
         mWeekTextSize = mWeekTextSize == 0 ? Utils.dp2px(getContext(), MonthStyle.WEEK_TEXT_SIZE) : mWeekTextSize;
         mEnabledTextSize = mEnabledTextSize == 0 ? Utils.dp2px(getContext(), MonthStyle.ENABLE_TEXT_SIZE) : mEnabledTextSize;
@@ -278,9 +230,11 @@ public class DatePickerDialog extends DialogFragment implements View.OnClickList
 
         mScreenWidth = Utils.getScreenWidth(getContext());
 
-        tvCancel = (TextView) v.findViewById(R.id.tv_cancel);
-        tvComplete = (TextView) v.findViewById(R.id.tv_complete);
-        tvDayCount = (TextView) v.findViewById(R.id.tv_day_count);
+        if (mTitleBarBackgroundColor != 0) titleBar.setBackgroundColor(mTitleBarBackgroundColor);
+        if (mTitleBarLeftTextColor != 0) tvCancel.setTextColor(mTitleBarLeftTextColor);
+        if (mTitleBarRightTextColor != 0) tvComplete.setTextColor(mTitleBarRightTextColor);
+        if (mTitleBarTitleTextColor != 0) tvDayCount.setTextColor(mTitleBarTitleTextColor);
+
         tvCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -289,18 +243,18 @@ public class DatePickerDialog extends DialogFragment implements View.OnClickList
         });
         tvComplete.setOnClickListener(this);
 
-        inputStart = (TextInputLayout) v.findViewById(R.id.input_start);
-        inputEnd = (TextInputLayout) v.findViewById(R.id.input_end);
+        inputStart = (TextInputLayout) findViewById(R.id.input_start);
+        inputEnd = (TextInputLayout) findViewById(R.id.input_end);
 
         inputStart.setHintTextAppearance(R.style.TextAppearance_Hint);
         inputEnd.setHintTextAppearance(R.style.TextAppearance_Hint);
 
-        EditText etFocus = (EditText) v.findViewById(R.id.et_focus);
+        EditText etFocus = (EditText) findViewById(R.id.et_focus);
         etFocus.setEnabled(false);
         etFocus.setKeyListener(null);
 
-        etStart = (EditText) v.findViewById(R.id.tv_start);
-        etEnd = (EditText) v.findViewById(R.id.tv_end);
+        etStart = (EditText) findViewById(R.id.tv_start);
+        etEnd = (EditText) findViewById(R.id.tv_end);
         etStart.setEnabled(false);
         etEnd.setEnabled(false);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -312,13 +266,14 @@ public class DatePickerDialog extends DialogFragment implements View.OnClickList
         }
         etStart.setKeyListener(null);//禁用输入框
         etEnd.setKeyListener(null);//禁用输入框
-        etStart.addTextChangedListener(new ChangeTextSizeWatcher(etStart));
-        etEnd.addTextChangedListener(new ChangeTextSizeWatcher(etEnd));
+        etStart.addTextChangedListener(new DatePickerDialog.ChangeTextSizeWatcher(etStart));
+        etEnd.addTextChangedListener(new DatePickerDialog.ChangeTextSizeWatcher(etEnd));
 
-        cursor = v.findViewById(R.id.cursor);
+        cursor = findViewById(R.id.cursor);
 
-        mWeekLayout = (LinearLayout) v.findViewById(R.id.week);
-        mWeekView = (WeekView) v.findViewById(R.id.weekView);
+        mWeekLayout = (LinearLayout) findViewById(R.id.week);
+        mWeekView = (WeekView) findViewById(R.id.weekView);
+
         mWeekView.setWeekTextColor(mWeekTextColor);
         mWeekView.setWeekTextSize(mWeekTextSize);
         mWeekLayout.setVisibility(mIsWeekShown ? View.GONE : View.VISIBLE);
@@ -340,9 +295,9 @@ public class DatePickerDialog extends DialogFragment implements View.OnClickList
             mAdapter.setSelectedDate(mStartYear, mStartMonth, mStartDay, mEndYear, mEndMonth, mEndDay);
         }
 
-        mRecyclerView = (RecyclerView) v.findViewById(R.id.datePicker);
+        mRecyclerView = (RecyclerView) findViewById(R.id.datePicker);
         mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         Calendar calendar = Calendar.getInstance();
         int nowYear = calendar.get(Calendar.YEAR);
@@ -369,7 +324,7 @@ public class DatePickerDialog extends DialogFragment implements View.OnClickList
         if (v == tvComplete) {
             if (mListener != null) {
                 if (mStartYear == 0 && mStartMonth == 0 && mStartDay == 0) {
-                    Toast.makeText(getActivity(), "您未选择正确的时间", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "您未选择正确的时间", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
                     if (mEndYear == 0 && mEndMonth == 0 && mEndDay == 0) {
@@ -466,6 +421,10 @@ public class DatePickerDialog extends DialogFragment implements View.OnClickList
      * @param startDay   开始日
      */
     public void setSelectedDate(int startYear, int startMonth, int startDay) {
+        if (!Utils.isDayCorrect(startYear, startMonth, startDay)) {
+            resetSelectedDate();
+            return;
+        }
         mStartYear = startYear;
         mStartMonth = startMonth;
         mStartDay = startDay;
@@ -485,6 +444,10 @@ public class DatePickerDialog extends DialogFragment implements View.OnClickList
      * @param endDay     结束日
      */
     public void setSelectedDate(int startYear, int startMonth, int startDay, int endYear, int endMonth, int endDay) {
+        if (!Utils.isDayCorrect(startYear, startMonth, startDay)) {
+            resetSelectedDate();
+            return;
+        }
         mStartYear = startYear;
         mStartMonth = startMonth;
         mStartDay = startDay;
@@ -525,8 +488,9 @@ public class DatePickerDialog extends DialogFragment implements View.OnClickList
      * 设置MonthView中显示年月的文字的大小
      *
      * @param yearTextSize 显示XXXX年XX月的文字的大小
+     * @deprecated 有错误，暂不提供支持
      */
-    public void setYearTextSize(int yearTextSize) {
+    private void setYearTextSize(int yearTextSize) {
         this.mYearTextSize = yearTextSize;
     }
 
@@ -543,9 +507,32 @@ public class DatePickerDialog extends DialogFragment implements View.OnClickList
      * 设置MonthView中显示周日~周六的文字的大小
      *
      * @param weekTextSize 显示周日~周六的文字的大小
+     * @deprecated 有错误，暂不提供支持
      */
-    public void setWeekTextSize(int weekTextSize) {
+    private void setWeekTextSize(int weekTextSize) {
         this.mWeekTextSize = weekTextSize;
+    }
+
+
+    private int mTitleBarBackgroundColor;
+    private int mTitleBarTitleTextColor;
+    private int mTitleBarLeftTextColor;
+    private int mTitleBarRightTextColor;
+
+    public void setTitleBarBackgroundColor(int color) {
+        mTitleBarBackgroundColor = color;
+    }
+
+    public void setTitleBarTitleTextColor(int color) {
+        mTitleBarTitleTextColor = color;
+    }
+
+    public void setTitleBarLeftTextColor(int color) {
+        mTitleBarLeftTextColor = color;
+    }
+
+    public void setTitleBarRightTextColor(int color) {
+        mTitleBarRightTextColor = color;
     }
 
     /**
@@ -561,8 +548,9 @@ public class DatePickerDialog extends DialogFragment implements View.OnClickList
      * 设置MonthView中可以被选择的日期的文字的大小
      *
      * @param enableTextSize 可以被选择的日期的文字的大小
+     * @deprecated 有错误，暂不提供支持
      */
-    public void setEnabledTextSize(int enableTextSize) {
+    private void setEnabledTextSize(int enableTextSize) {
         this.mEnabledTextSize = enableTextSize;
     }
 
@@ -579,8 +567,9 @@ public class DatePickerDialog extends DialogFragment implements View.OnClickList
      * 设置MonthView中不可被选择的日期的文字的大小
      *
      * @param disabledTextSize 不可被选择的日期的文字的大小
+     * @deprecated 有错误，暂不提供支持
      */
-    public void setDisabledTextSize(int disabledTextSize) {
+    private void setDisabledTextSize(int disabledTextSize) {
         this.mDisabledTextSize = disabledTextSize;
     }
 
@@ -608,7 +597,7 @@ public class DatePickerDialog extends DialogFragment implements View.OnClickList
      *
      * @param listener 监听器
      */
-    public void setOnDateSelectedListener(OnDateSelectedListener listener) {
+    public void setOnDateSelectedListener(DatePickerDialog.OnDateSelectedListener listener) {
         mListener = listener;
     }
 
@@ -659,5 +648,11 @@ public class DatePickerDialog extends DialogFragment implements View.OnClickList
                 et.setTextSize(Utils.dp2px(getContext(), 6));
             }
         }
+    }
+
+    @Override
+    public void show() {
+        super.show();
+        initViews();
     }
 }

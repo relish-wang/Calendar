@@ -10,7 +10,9 @@ import android.view.View;
 
 /**
  * 仅显示星期行的View
- * Created by 王鑫 on 2017/3/23.
+ *
+ * @author Relish Wang
+ * @since 2017/3/23
  */
 public class WeekView extends View {
 

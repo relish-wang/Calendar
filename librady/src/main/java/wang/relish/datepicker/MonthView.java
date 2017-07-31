@@ -16,7 +16,9 @@ import wang.relish.datepicker.drawable.TodayDrawable;
 
 /**
  * 显示月份
- * Created by 王鑫 on 2017/3/15.
+ *
+ * @author Relish Wang
+ * @since 2017/3/15
  */
 
 public final class MonthView extends View {

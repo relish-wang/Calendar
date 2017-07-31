@@ -4,7 +4,9 @@ import android.graphics.Color;
 
 /**
  * MonthView的整体样式
- * Created by 王鑫 on 2017/3/20.
+ *
+ * @author Relish Wang
+ * @since 2017/3/20
  */
 public final class MonthStyle {
 

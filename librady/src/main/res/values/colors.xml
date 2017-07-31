@@ -3,4 +3,9 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF571A</color>
+
+    <color name="datepicker_title_bar_title_text_color">#1A1A1A</color>
+    <color name="datepicker_title_bar_background_color">#FAFAFA</color>
+    <color name="datepicker_title_bar_left_text_color">#FF571A</color>
+    <color name="datepicker_title_bar_right_text_color">#FF571A</color>
 </resources>

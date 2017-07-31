@@ -18,7 +18,10 @@ import wang.relish.datepicker.drawable.TodayDrawable;
 
 /**
  * 日期范围选择器适配器
- * Created by 王鑫 on 2017/3/15.
+ * /**
+ *
+ * @author Relish Wang
+ * @since 2017/3/15
  */
 public class DatePickerAdapter extends RecyclerView.Adapter<DatePickerAdapter.VH>
         implements MonthView.OnSelectListener {

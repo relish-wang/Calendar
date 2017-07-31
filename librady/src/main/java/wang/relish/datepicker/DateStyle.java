@@ -5,7 +5,9 @@ import wang.relish.datepicker.drawable.CustomDrawable;
 
 /**
  * MonthView的Item样式
- * Created by 王鑫 on 2017/3/16.
+ *
+ * @author Relish Wang
+ * @since 2017/3/16
  */
 public final class DateStyle {
 
