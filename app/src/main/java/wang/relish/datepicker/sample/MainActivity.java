@@ -19,8 +19,8 @@ import wang.relish.datepicker.MonthStyle;
  * @author Relish Wang
  * @since 2017/3/22
  */
-public class MainActivity extends AppCompatActivity implements DatePickerDialog.OnDateSelectedListener,
-        ColorPickerDialog.OnColorSelectCompletedListener, View.OnClickListener,
+public class MainActivity extends AppCompatActivity implements
+        DatePickerDialog.OnDateSelectedListener, View.OnClickListener,
         CompoundButton.OnCheckedChangeListener, RadioGroup.OnCheckedChangeListener {
 
     TextView tv;
@@ -156,81 +156,90 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     }
 
     @Override
-    public void onColorSelectCompleted(ColorPickerDialog dialog, int r, int g, int b) {
-        switch (dialog.getTag()) {
-            case "year":
-                mYearTextColor = Color.rgb(r, g, b);
-                mYearColorView.setBackgroundColor(mYearTextColor);
-                break;
-            case "week":
-                mWeekTextColor = Color.rgb(r, g, b);
-                mWeekColorView.setBackgroundColor(mWeekTextColor);
-                break;
-            case "enabled":
-                mEnabledTextColor = Color.rgb(r, g, b);
-                mEnabledColorView.setBackgroundColor(mEnabledTextColor);
-                break;
-            case "disabled":
-                mDisabledTextColor = Color.rgb(r, g, b);
-                mDisabledColorView.setBackgroundColor(mDisabledTextColor);
-                break;
-            case "title_background":
-                mTitleBackgroundColor = Color.rgb(r, g, b);
-                mTitleBackgroundColorView.setBackgroundColor(mTitleBackgroundColor);
-                break;
-            case "title_text":
-                mTitleTextColor = Color.rgb(r, g, b);
-                mTitleTextColorView.setBackgroundColor(mTitleTextColor);
-                break;
-            case "title_left":
-                mTitleLeftTextColor = Color.rgb(r, g, b);
-                mTitleLeftTextColorView.setBackgroundColor(mTitleLeftTextColor);
-                break;
-            case "title_right":
-                mTitleRightTextColor = Color.rgb(r, g, b);
-                mTitleRightTextColorView.setBackgroundColor(mTitleRightTextColor);
-                break;
-        }
-    }
-
-    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.year_color:
-                showColorDialog(mYearTextColor, "year");
+                showColorDialog(mYearTextColor, new ColorPickerDialog.OnColorChangedListener() {
+                    @Override
+                    public void onColorChanged(int color) {
+                        mYearTextColor = color;
+                        mYearColorView.setBackgroundColor(mYearTextColor);
+                    }
+                });
                 break;
             case R.id.week_color:
-                showColorDialog(mWeekTextColor, "week");
+                showColorDialog(mWeekTextColor, new ColorPickerDialog.OnColorChangedListener() {
+                    @Override
+                    public void onColorChanged(int color) {
+                        mWeekTextColor = color;
+                        mWeekColorView.setBackgroundColor(mWeekTextColor);
+                    }
+                });
                 break;
             case R.id.enabled_color:
-                showColorDialog(mEnabledTextColor, "enabled");
+                showColorDialog(mEnabledTextColor, new ColorPickerDialog.OnColorChangedListener() {
+                    @Override
+                    public void onColorChanged(int color) {
+                        mEnabledTextColor = color;
+                        mEnabledColorView.setBackgroundColor(mWeekTextColor);
+                    }
+                });
                 break;
             case R.id.disabled_color:
-                showColorDialog(mDisabledTextColor, "disabled");
+                showColorDialog(mDisabledTextColor, new ColorPickerDialog.OnColorChangedListener() {
+                    @Override
+                    public void onColorChanged(int color) {
+                        mDisabledTextColor = color;
+                        mDisabledColorView.setBackgroundColor(mTitleBackgroundColor);
+                    }
+                });
                 break;
             case R.id.title_background_color:
-                showColorDialog(mYearTextColor, "title_background");
+                showColorDialog(mYearTextColor, new ColorPickerDialog.OnColorChangedListener() {
+                    @Override
+                    public void onColorChanged(int color) {
+                        mTitleBackgroundColor = color;
+                        mTitleBackgroundColorView.setBackgroundColor(mTitleBackgroundColor);
+                    }
+                });
                 break;
             case R.id.title_text_color:
-                showColorDialog(mWeekTextColor, "title_text");
+                showColorDialog(mWeekTextColor, new ColorPickerDialog.OnColorChangedListener() {
+                    @Override
+                    public void onColorChanged(int color) {
+                        mTitleTextColor = color;
+                        mTitleTextColorView.setBackgroundColor(mTitleTextColor);
+                    }
+                });
                 break;
             case R.id.title_left_text_color:
-                showColorDialog(mEnabledTextColor, "title_left");
+                showColorDialog(mEnabledTextColor, new ColorPickerDialog.OnColorChangedListener() {
+                    @Override
+                    public void onColorChanged(int color) {
+                        mTitleLeftTextColor = color;
+                        mTitleLeftTextColorView.setBackgroundColor(mTitleLeftTextColor);
+                    }
+                });
                 break;
             case R.id.title_right_text_color:
-                showColorDialog(mDisabledTextColor, "title_right");
+                showColorDialog(mDisabledTextColor, new ColorPickerDialog.OnColorChangedListener() {
+                    @Override
+                    public void onColorChanged(int color) {
+                        mTitleRightTextColor = color;
+                        mTitleRightTextColorView.setBackgroundColor(mTitleRightTextColor);
+                    }
+                });
                 break;
 
         }
     }
 
-    private void showColorDialog(int color, String tag) {
-        int r = (color & 0xff0000) >> 16;
-        int g = (color & 0x00ff00) >> 8;
-        int b = (color & 0x0000ff);
-        ColorPickerDialog dialog = ColorPickerDialog.getInstance(r, g, b);
-        dialog.setOnColorSelectCompletedListener(this);
-        dialog.show(getSupportFragmentManager(), tag);
+    private void showColorDialog(int color, ColorPickerDialog.OnColorChangedListener listener) {
+        new ColorPickerDialog.Builder(MainActivity.this, color)
+                .setHexValueEnabled(false)
+                .setOnColorChangedListener(listener)
+                .build()
+                .show();
     }
 
     @Override
