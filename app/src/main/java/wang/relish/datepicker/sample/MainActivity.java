@@ -1,6 +1,5 @@
 package wang.relish.datepicker.sample;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
@@ -33,10 +32,10 @@ public class MainActivity extends AppCompatActivity implements
     private int mEnabledTextColor = MonthStyle.ENABLED_TEXT_COLOR;
     private int mDisabledTextColor = MonthStyle.DISABLED_TEXT_COLOR;
 
-    private int mTitleBackgroundColor = Color.parseColor("#FAFAFA");
-    private int mTitleTextColor = Color.parseColor("#1A1A1A");
-    private int mTitleLeftTextColor = Color.parseColor("#FF571A");
-    private int mTitleRightTextColor = Color.parseColor("#FF571A");
+    private int mTitleBackgroundColor = 0xFAFAFA;
+    private int mTitleTextColor = 0x1A1A1A;
+    private int mTitleLeftTextColor = 0xFF571A;
+    private int mTitleRightTextColor = 0xFF571A;
 
 
     private View mYearColorView;
@@ -67,10 +66,10 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mYearTextColor = Color.parseColor("#ff571a");
-        mWeekTextColor = Color.parseColor("#999999");
-        mEnabledTextColor = Color.parseColor("#1a1a1a");
-        mDisabledTextColor = Color.parseColor("#1a1a1a");
+        mYearTextColor = 0xff571a;
+        mWeekTextColor = 0x999999;
+        mEnabledTextColor = 0x1a1a1a;
+        mDisabledTextColor = 0x1a1a1a;
         dialog = DatePickerDialog.newInstance(this);
 
         tv = (TextView) findViewById(R.id.tv);
