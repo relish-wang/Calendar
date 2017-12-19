@@ -2,6 +2,9 @@ package wang.relish.datepicker.drawable;
 
 import android.graphics.drawable.Drawable;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * MonthView的Item样式
  * Created by 王鑫 on 2017/3/17.
@@ -34,4 +37,9 @@ public abstract class CustomDrawable extends Drawable {
         startX = x;
         startY = y;
     }
+
+    public <T> List<T> findPairingBetween() {
+        return Collections.emptyList();
+    }
+
 }
