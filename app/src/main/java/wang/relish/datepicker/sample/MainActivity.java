@@ -1,5 +1,6 @@
 package wang.relish.datepicker.sample;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
@@ -138,6 +139,13 @@ public class MainActivity extends AppCompatActivity implements
 
                 dialog.setOnDateSelectedListener(MainActivity.this);
                 dialog.show();
+            }
+        });
+
+        findViewById(R.id.text_disable).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, SecondActivity.class));
             }
         });
     }
