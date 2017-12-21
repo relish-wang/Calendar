@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CalendarView">
+        <attr name="contentLayout" format="reference" />
+        <attr name="weekFirstDay" format="enum">
+            <enum name="Sunday" value="1" />
+            <enum name="Monday" value="2" />
+            <enum name="Tuesday" value="3" />
+            <enum name="Wednesday" value="4" />
+            <enum name="Thursday" value="5" />
+            <enum name="Friday" value="6" />
+            <enum name="Saturday" value="7" />
+        </attr>
+    </declare-styleable>
+</resources>

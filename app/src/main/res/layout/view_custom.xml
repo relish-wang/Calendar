@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="wang.relish.datepicker.sample.MainActivity">
+    tools:context="wang.relish.datepicker.sample.DateRangePickerActivity">
 
     <wang.relish.datepicker.sample.CustomView
         android:layout_width="match_parent"
