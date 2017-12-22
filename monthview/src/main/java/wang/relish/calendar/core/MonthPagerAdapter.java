@@ -69,7 +69,7 @@ public class MonthPagerAdapter extends RecyclerViewPager.Adapter<MonthPagerAdapt
 
     @Override
     public MonthHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_month, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.monthlib_item_month, parent, false);
         return new MonthHolder(itemView);
     }
 
@@ -130,7 +130,7 @@ public class MonthPagerAdapter extends RecyclerViewPager.Adapter<MonthPagerAdapt
 
         private MonthHolder(View itemView) {
             super(itemView);
-            monthView = itemView.findViewById(R.id.monthview);
+            monthView = itemView.findViewById(R.id.mv);
         }
     }
 
