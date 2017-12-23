@@ -245,22 +245,33 @@ public class DateRangePickerActivity extends AppCompatActivity implements
 
     @Override
     public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+        clearSelection();
         switch (checkedId) {
             case R.id.rb_0:
                 dialog = DatePickerDialog.newInstance(this);
                 break;
             case R.id.rb_2:
-                dialog = DatePickerDialog.newInstance(this, 2016, 2017);
+                dialog = DatePickerDialog.newInstance(this, 2018, 1);
                 break;
             case R.id.rb_3:
-                dialog = DatePickerDialog.newInstance(this, 2017, 1, 13);
+                dialog = DatePickerDialog.newInstance(this, 2018, 1, 13);
                 break;
             case R.id.rb_4:
-                dialog = DatePickerDialog.newInstance(this, 2017, 1, 2017, 3);
+                dialog = DatePickerDialog.newInstance(this, 2018, 1, 2018, 3);
                 break;
             case R.id.rb_6:
-                dialog = DatePickerDialog.newInstance(this, 2017, 1, 13, 2017, 3, 2);
+                dialog = DatePickerDialog.newInstance(this, 2018, 1, 13, 2018, 3, 2);
                 break;
         }
+    }
+
+    private void clearSelection() {
+        mStartYear = 0;
+        mStartMonth = 0;
+        mStartDay = 0;
+        mEndYear = 0;
+        mEndMonth = 0;
+        mEndDay = 0;
+        tv.setText("");
     }
 }
