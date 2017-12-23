@@ -1,1 +1,1 @@
-include ':app', ':daterangepicker', ':monthview', ':calendarview', ':calendarview-rn'
+include ':sample', ':calendar-picker', ':calendar-core', ':calendar-pager', ':calendar-pager-rn'
