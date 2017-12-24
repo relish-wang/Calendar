@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.RectF;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
@@ -24,7 +25,8 @@ import java.util.Arrays;
  * @since 2017/3/15
  */
 
-public final class MonthView extends View implements ITopView {
+public class MonthView extends View {
+
     //------------------魔鬼数字相关_start------------------------
     /**
      * 设计稿上一个格子的高度是屏幕宽度的104/750
@@ -54,13 +56,13 @@ public final class MonthView extends View implements ITopView {
     /**
      * 格子高
      */
-    private float mCellHeight;
+    protected float mCellHeight;
     //------------------尺寸相关_end---------------------------
 
     /**
      * 显示的数据
      */
-    private MonthStyle mMonthStyle;
+    protected MonthStyle mMonthStyle;
 
     /**
      * 监听器
@@ -124,16 +126,18 @@ public final class MonthView extends View implements ITopView {
             cell = new RectF(l, t, l + mCellWidth, t + mCellHeight);
             DateStyle item = dateStyle[i];
             if (item == null) continue;
-            // 1 选中样式
-            IDrawable activeDrawable = item.getActiveDrawable();
-            if (activeDrawable != null) activeDrawable.draw(canvas, cell);
-            // 2 日期文字
-            IDrawable dateDrawable = item.getDateDrawable();
-            if (dateDrawable != null) dateDrawable.draw(canvas, cell);
-            // 3 徽标
-            IDrawable badgeDrawable = item.getBadgeDrawable();
-            if (badgeDrawable != null) badgeDrawable.draw(canvas, cell);
+            // 绘制样式
+            onDrawCell(canvas, cell, item);
         }
+    }
+
+    public void onDrawCell(Canvas canvas, @NonNull RectF cell, @NonNull DateStyle dateStyle) {
+        // 1 选中样式
+        IDrawable activeDrawable = dateStyle.getActiveDrawable();
+        if (activeDrawable != null) activeDrawable.draw(canvas, cell);
+        // 2 日期文字
+        IDrawable dateDrawable = dateStyle.getDateDrawable();
+        if (dateDrawable != null) dateDrawable.draw(canvas, cell);
     }
 
 
@@ -231,9 +235,6 @@ public final class MonthView extends View implements ITopView {
     public void setMonthStyle(MonthStyle monthStyle) {
         mMonthStyle = monthStyle;
         invalidate();
-        if (mOnTopViewChangedListener != null) {
-            mOnTopViewChangedListener.onLayoutChanged(this);
-        }
     }
 
     /**
@@ -246,27 +247,5 @@ public final class MonthView extends View implements ITopView {
     @Override
     public void setOnClickListener(@Nullable OnClickListener l) {
         throw new UnsupportedOperationException("CANNOT do that!");
-    }
-
-    public int getItemTop() {
-        int currSelectedPosition = Utils.getPositionOfDateInMonthView(mMonthStyle);
-        int selectedLine = currSelectedPosition / 7;
-        return (int) (selectedLine * mCellHeight);
-    }
-
-    public int getItemHeight() {
-        return (int) mCellHeight;
-    }
-
-    private OnTopViewChangedListener mOnTopViewChangedListener;
-
-    @Override
-    public void setOnTopViewChangedListener(OnTopViewChangedListener listener) {
-        mOnTopViewChangedListener = listener;
-    }
-
-    @Override
-    public View getView() {
-        return this;
     }
 }

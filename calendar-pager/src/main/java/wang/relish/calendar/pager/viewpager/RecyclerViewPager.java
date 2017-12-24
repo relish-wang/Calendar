@@ -1,4 +1,4 @@
-package wang.relish.calendar.viewpager;
+package wang.relish.calendar.pager.viewpager;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

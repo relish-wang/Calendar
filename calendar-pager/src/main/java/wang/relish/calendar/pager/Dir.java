@@ -1,13 +1,13 @@
-package wang.relish.calendar;
+package wang.relish.calendar.pager;
 
 import android.support.annotation.IntDef;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-import static wang.relish.calendar.Dir.LEFT;
-import static wang.relish.calendar.Dir.NO_MOVEMENT;
-import static wang.relish.calendar.Dir.RIGHT;
+import static wang.relish.calendar.pager.Dir.LEFT;
+import static wang.relish.calendar.pager.Dir.NO_MOVEMENT;
+import static wang.relish.calendar.pager.Dir.RIGHT;
 
 /**
  * 滑动方向

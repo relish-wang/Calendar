@@ -1,4 +1,4 @@
-package wang.relish.calendar;
+package wang.relish.calendar.pager;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -24,13 +24,16 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import wang.relish.calendar.core.BuildConfig;
-import wang.relish.calendar.core.R;
-import wang.relish.calendar.listener.OnChangeDateListener;
-import wang.relish.calendar.listener.OnChangePageListener;
-import wang.relish.calendar.listener.OnChangeStatusListener;
-import wang.relish.calendar.listener.OnClickBackTodayListener;
-import wang.relish.calendar.viewpager.RecyclerViewPager;
+import wang.relish.calendar.MonthView;
+import wang.relish.calendar.OnSelectListener;
+import wang.relish.calendar.WeekView;
+import wang.relish.calendar.pager.listener.OnChangeDateListener;
+import wang.relish.calendar.pager.listener.OnChangePageListener;
+import wang.relish.calendar.pager.listener.OnChangeStatusListener;
+import wang.relish.calendar.pager.listener.OnClickBackTodayListener;
+import wang.relish.calendar.pager.viewpager.RecyclerViewPager;
+
+//import wang.relish.calendar.Utils;
 
 
 /**
@@ -108,19 +111,19 @@ public class CalendarView extends LinearLayout {
         mCurrDay = mNowDay;
 
         LayoutInflater inflater = LayoutInflater.from(context);
-        mLlRoot = (LinearLayout) inflater.inflate(R.layout.calendar, this, false);
-        mCalendarHeader = (CalendarHeaderView) mLlRoot.findViewById(R.id.calendar_header);
-        mWeekView = (WeekView) mLlRoot.findViewById(R.id.week_view);
+        mLlRoot = (LinearLayout) inflater.inflate(R.layout.pagerlib_calendar, this, false);
+        mCalendarHeader = mLlRoot.findViewById(R.id.calendar_header);
+        mWeekView = mLlRoot.findViewById(R.id.week_view);
         mCalendarHeader.setOnClickBackTodayListener(new OnClickBackTodayListener() {
             @Override
             public void onClickBackToday() {
                 goToday();
             }
         });
-        mCalendarLayout = (CalendarLayout) mLlRoot.findViewById(R.id.calendar_layout);
-        mContentRootLayout = (FrameLayout) mLlRoot.findViewById(R.id.rl_content);
+        mCalendarLayout = mLlRoot.findViewById(R.id.calendar_layout);
+        mContentRootLayout = mLlRoot.findViewById(R.id.rl_content);
 
-        mMonthPager = (MonthPager) mLlRoot.findViewById(R.id.vp_month);
+        mMonthPager = mLlRoot.findViewById(R.id.vp_month);
         mMonthAdapter = new MonthPagerAdapter(mData, new OnSelectListener() {
             @Override
             public void onPrevMonthDateSelect(MonthView monthView, int year, int month, int day) {

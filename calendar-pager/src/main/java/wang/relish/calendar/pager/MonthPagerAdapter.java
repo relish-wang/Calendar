@@ -1,4 +1,4 @@
-package wang.relish.calendar;
+package wang.relish.calendar.pager;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,8 +8,9 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import wang.relish.calendar.core.R;
-import wang.relish.calendar.viewpager.RecyclerViewPager;
+import wang.relish.calendar.MonthStyle;
+import wang.relish.calendar.OnSelectListener;
+import wang.relish.calendar.pager.viewpager.RecyclerViewPager;
 
 /**
  * 日历的ViewPager的Adapter
@@ -70,7 +71,7 @@ public class MonthPagerAdapter extends RecyclerViewPager.Adapter<MonthPagerAdapt
 
     @Override
     public MonthHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.monthlib_item_month, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.pagerlib_item_month, parent, false);
         return new MonthHolder(itemView);
     }
 
@@ -127,7 +128,7 @@ public class MonthPagerAdapter extends RecyclerViewPager.Adapter<MonthPagerAdapt
 
     class MonthHolder extends RecyclerViewPager.ViewHolder {
 
-        MonthView monthView;
+        PMonthView monthView;
 
         private MonthHolder(View itemView) {
             super(itemView);

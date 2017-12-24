@@ -6,7 +6,7 @@ package wang.relish.calendar;
  * @author wangxin
  * @since 2017/11/30
  */
-/* package */ interface OnSelectListener {
+public interface OnSelectListener {
     /**
      * 选择了当前月的某个日期
      *

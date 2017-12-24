@@ -5,7 +5,7 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <wang.relish.calendar.CalendarHeaderView
+    <wang.relish.calendar.pager.CalendarHeaderView
         android:id="@+id/calendar_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
@@ -15,12 +15,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <wang.relish.calendar.CalendarLayout
+    <wang.relish.calendar.pager.CalendarLayout
         android:id="@+id/calendar_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <wang.relish.calendar.MonthPager
+        <wang.relish.calendar.pager.MonthPager
             android:id="@+id/vp_month"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
@@ -31,5 +31,5 @@
             android:layout_height="match_parent"
             android:background="@color/white" />
 
-    </wang.relish.calendar.CalendarLayout>
+    </wang.relish.calendar.pager.CalendarLayout>
 </LinearLayout>

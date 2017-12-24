@@ -1,4 +1,4 @@
-package wang.relish.calendar.drawable;
+package wang.relish.calendar.pager.drawable;
 
 import android.graphics.Canvas;
 import android.graphics.Color;

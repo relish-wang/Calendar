@@ -3,11 +3,8 @@ package wang.relish.calendar;
 import android.graphics.Color;
 
 import java.io.Serializable;
-
-import wang.relish.calendar.drawable.ActiveDrawable;
-import wang.relish.calendar.drawable.BadgeDrawable;
-import wang.relish.calendar.drawable.DateDrawable;
-import wang.relish.calendar.drawable.RedPointDrawable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 日期展示样式
@@ -26,7 +23,7 @@ public class DateStyle implements Serializable {
      * 默认不显示
      * 0：不显示
      */
-    private int badgeNumber = 0;
+    protected int badgeNumber = 0;
 
     /**
      * 日期文字的颜色
@@ -42,17 +39,22 @@ public class DateStyle implements Serializable {
      * eg: 27
      * [1,31]
      */
-    private String text = "1";
+    protected String text = "1";
 
     /**
      * 是否选中
      */
-    private boolean isSelected = false;
+    protected boolean isSelected = false;
 
     /**
      * 是否是今天
      */
-    private boolean isToday = false;
+    protected boolean isToday = false;
+
+    /**
+     * 格子上的样式
+     */
+    private Map<String, IDrawable> drawables;
 
 
     /**
@@ -137,23 +139,18 @@ public class DateStyle implements Serializable {
         isToday = today;
     }
 
-    /**
-     * 选中样式
-     */
-    public IDrawable getActiveDrawable() {
-        if (isSelected) return new ActiveDrawable();
-        return null;
+    public void addDrawable(String key, IDrawable drawable) {
+        if (drawables == null) {
+            drawables = new HashMap<>();
+        }
+        drawables.put(key, drawable);
     }
 
-    /**
-     * 徽标样式
-     */
-    public IDrawable getBadgeDrawable() {
-        if (badgeNumber > 0) {
-            return isToday ? new BadgeDrawable(getBadgeNumberStr()) : new RedPointDrawable();
-        } else {
+    public IDrawable getDrawable(String key) {
+        if (drawables == null) {
             return null;
         }
+        return drawables.get(key);
     }
 
     /**
@@ -161,6 +158,14 @@ public class DateStyle implements Serializable {
      */
     public IDrawable getDateDrawable() {
         return new DateDrawable(text + "", Color.parseColor(textColor), isToday);
+    }
+
+    /**
+     * 选中样式
+     */
+    public IDrawable getActiveDrawable() {
+        if (isSelected) return new ActiveDrawable();
+        return null;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package wang.relish.calendar;
+package wang.relish.calendar.pager;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -6,7 +6,8 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
-import wang.relish.calendar.viewpager.RecyclerViewPager;
+import wang.relish.calendar.MonthView;
+import wang.relish.calendar.pager.viewpager.RecyclerViewPager;
 
 
 /**
@@ -59,7 +60,7 @@ public class MonthPager extends RecyclerViewPager implements ITopView {
     public int getItemTop() {
         View view = getChildAt(0);
         if (view != null && view instanceof MonthView) {
-            MonthView monthView = (MonthView) view;
+            PMonthView monthView = (PMonthView) view;
             return monthView.getItemTop();
         }
         return 0;
@@ -69,8 +70,8 @@ public class MonthPager extends RecyclerViewPager implements ITopView {
     public int getItemHeight() {
         if (mItemHeight != -1) return mItemHeight;
         View view = getChildAt(getCurrentPosition());
-        if (view != null && view instanceof MonthView) {
-            MonthView monthView = (MonthView) view;
+        if (view != null && view instanceof PMonthView) {
+            PMonthView monthView = (PMonthView) view;
             mItemHeight = monthView.getItemHeight();
             return mItemHeight;
         }

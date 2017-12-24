@@ -1,12 +1,12 @@
-package wang.relish.calendar;
+package wang.relish.calendar.pager;
 
 import android.support.annotation.IntDef;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-import static wang.relish.calendar.Stage.FOLD;
-import static wang.relish.calendar.Stage.OPEN;
+import static wang.relish.calendar.pager.Stage.FOLD;
+import static wang.relish.calendar.pager.Stage.OPEN;
 
 
 /**

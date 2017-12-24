@@ -1,4 +1,4 @@
-package wang.relish.calendar.viewpager;
+package wang.relish.calendar.pager.viewpager;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

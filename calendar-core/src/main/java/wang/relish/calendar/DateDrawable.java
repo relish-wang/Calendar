@@ -1,10 +1,8 @@
-package wang.relish.calendar.drawable;
+package wang.relish.calendar;
 
 import android.graphics.Canvas;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
-
-import wang.relish.calendar.IDrawable;
 
 /**
  * 日期文字
