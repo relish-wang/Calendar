@@ -1,4 +1,4 @@
-package wang.relish.calendar;
+package wang.relish.calendar.pager;
 
 /**
  * @author Relish Wang

@@ -117,13 +117,13 @@ public class BadgeDrawable extends IDrawable {
         canvas.drawText(mBadgeNumber, startX, startY, mPaint);
     }
 
-    @Override
-    public int intrinsicWidth() {
-        return (int) badgeViewWidth;
-    }
-
-    @Override
-    public int intrinsicHeight() {
-        return (int) badgeViewHeight;
-    }
+//    @Override
+//    public int intrinsicWidth() {
+//        return (int) badgeViewWidth;
+//    }
+//
+//    @Override
+//    public int intrinsicHeight() {
+//        return (int) badgeViewHeight;
+//    }
 }

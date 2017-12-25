@@ -69,13 +69,13 @@ public class RedPointDrawable extends IDrawable {
         canvas.drawCircle(centerX, centerY, mInRadius, mPaint);
     }
 
-    @Override
-    public int intrinsicWidth() {
-        return (int) (mOutRadius * 2);
-    }
-
-    @Override
-    public int intrinsicHeight() {
-        return (int) (mOutRadius * 2);
-    }
+//    @Override
+//    public int intrinsicWidth() {
+//        return (int) (mOutRadius * 2);
+//    }
+//
+//    @Override
+//    public int intrinsicHeight() {
+//        return (int) (mOutRadius * 2);
+//    }
 }

@@ -89,7 +89,7 @@ public class MonthView extends View {
     }
 
     private void init() {
-        mMonthStyle = MonthStyle.getMonthStyleDemo();
+        mMonthStyle = Utils.getMonthStyleDemo();
         setBackgroundColor(Color.WHITE);
     }
 
@@ -131,6 +131,13 @@ public class MonthView extends View {
         }
     }
 
+    /**
+     * 绘制日期的各种样式
+     *
+     * @param canvas    画布
+     * @param cell      样式绘制的区域
+     * @param dateStyle 日期样式们
+     */
     public void onDrawCell(Canvas canvas, @NonNull RectF cell, @NonNull DateStyle dateStyle) {
         // 1 选中样式
         IDrawable activeDrawable = dateStyle.getActiveDrawable();
@@ -235,13 +242,6 @@ public class MonthView extends View {
     public void setMonthStyle(MonthStyle monthStyle) {
         mMonthStyle = monthStyle;
         invalidate();
-    }
-
-    /**
-     * 返回所有的Item属性
-     */
-    public MonthStyle getMonthStyle() {
-        return mMonthStyle;
     }
 
     @Override

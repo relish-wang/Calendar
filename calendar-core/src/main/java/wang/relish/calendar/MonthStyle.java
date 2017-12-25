@@ -135,41 +135,6 @@ public class MonthStyle implements Serializable {
 
     }
 
-    public static MonthStyle getMonthStyleDemo() {
-        int weekFirstDay = Calendar.MONDAY;//每周的第一天是周？
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = 1;
-        int monthDayCount = Utils.getMonthDayCount(year, month);
-        DateStyle[] dateStyles = new DateStyle[42];//默认6行
-        int monthFirstDayDay = Utils.getMonthFirstDayDay(year, month); //日~六： 1~7
-        int preDay = monthFirstDayDay - weekFirstDay;
-        preDay = preDay < 0 ? preDay + 7 : preDay;
-
-        int preMonthDayCount = Utils.getPreMonthDayCount(year, month);
-        int j = 0;
-        for (int i = preMonthDayCount - preDay + 1; i <= preMonthDayCount && j < dateStyles.length; i++, j++) {
-            dateStyles[j] = DateStyle.createUnattainableStyle(i + "", 0, false);
-        }
-        for (int i = 0; i < monthDayCount && j < dateStyles.length; i++, j++) {
-            if (i == 0) {
-                dateStyles[j] = DateStyle.createNormalStyle((i + 1) + "", 86, true, true);
-            } else if (i < 5) {
-                dateStyles[j] = DateStyle.createNormalStyle((i + 1) + "", 1, false, false);
-            } else {
-                dateStyles[j] = DateStyle.createNormalStyle((i + 1) + "", 0, false, false);
-            }
-        }
-        for (int i = 1; j < dateStyles.length; j++, i++) {
-            dateStyles[j] = DateStyle.createUnattainableStyle(i + "", 0, false);
-        }
-        MonthStyle monthStyle = new MonthStyle(year, month, day, Calendar.MONDAY);
-        monthStyle.setWeekFirstDay(weekFirstDay);
-        monthStyle.setDateCells(dateStyles);
-        return monthStyle;
-    }
-
     public int getYear() {
         return year;
     }

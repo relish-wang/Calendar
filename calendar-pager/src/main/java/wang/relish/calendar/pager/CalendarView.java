@@ -114,6 +114,7 @@ public class CalendarView extends LinearLayout {
         mLlRoot = (LinearLayout) inflater.inflate(R.layout.pagerlib_calendar, this, false);
         mCalendarHeader = mLlRoot.findViewById(R.id.calendar_header);
         mWeekView = mLlRoot.findViewById(R.id.week_view);
+        mWeekView.setWeekFirstDay(mWeekFirstDay);
         mCalendarHeader.setOnClickBackTodayListener(new OnClickBackTodayListener() {
             @Override
             public void onClickBackToday() {
@@ -351,6 +352,7 @@ public class CalendarView extends LinearLayout {
 
     public void setWeekFirstDay(int weekFirstDay) {
         mWeekFirstDay = weekFirstDay;
+        mWeekView.setWeekFirstDay(mWeekFirstDay);
         invalidate();
     }
 

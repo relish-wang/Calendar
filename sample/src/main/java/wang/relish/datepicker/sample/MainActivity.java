@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import wang.relish.calendar.MonthView;
+
 /**
  * @author Relish Wang
  * @since 2017/12/21
@@ -22,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         llRoot = new LinearLayout(this);
         llRoot.setOrientation(LinearLayout.VERTICAL);
+        llRoot.addView(new MonthView(this));
         addViews();
         setContentView(llRoot);
     }

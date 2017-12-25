@@ -1,4 +1,4 @@
-package wang.relish.calendar;
+package wang.relish.calendar.pager;
 
 import android.text.TextUtils;
 
@@ -32,7 +32,7 @@ public class DateEventImpl implements DateEvent {
         int year = Integer.parseInt(date.substring(0, 4));
         int month = Integer.parseInt(date.substring(5, 7));
         int day = Integer.parseInt(date.substring(8));
-        if (!Utils.isDayCorrect(year, month - 1, day)) {
+        if (!wang.relish.calendar.Utils.isDayCorrect(year, month - 1, day)) {
             throw new IllegalArgumentException("no such date: " + date);
         }
         this.date = date.replace("-", "");

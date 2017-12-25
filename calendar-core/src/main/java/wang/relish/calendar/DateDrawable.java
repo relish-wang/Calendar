@@ -10,7 +10,7 @@ import android.support.annotation.NonNull;
  * @author Relish Wang
  * @since 2017/11/23
  */
-public class DateDrawable extends IDrawable {
+/* package */ class DateDrawable extends IDrawable {
 
 
     /**
@@ -41,7 +41,6 @@ public class DateDrawable extends IDrawable {
         this.textColor = textColor;
         this.text = text;
         this.isToday = isToday;
-
     }
 
     private float textHeight;
@@ -55,15 +54,5 @@ public class DateDrawable extends IDrawable {
         textHeight = mPaint.ascent() + mPaint.descent();
         mPaint.setColor(textColor);
         canvas.drawText(text, cell.centerX() - textWidth / 2, cell.centerY() - textHeight / 2, mPaint);
-    }
-
-    @Override
-    public int intrinsicWidth() {
-        return (int) textWidth;
-    }
-
-    @Override
-    public int intrinsicHeight() {
-        return (int) textHeight;
     }
 }

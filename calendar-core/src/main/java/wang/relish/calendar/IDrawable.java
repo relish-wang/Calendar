@@ -26,20 +26,6 @@ public abstract class IDrawable extends Drawable {
     public abstract void draw(@NonNull Canvas canvas, RectF cell);
 
     /**
-     * 宽度
-     *
-     * @return -1
-     */
-    public abstract int intrinsicWidth();
-
-    /**
-     * 高度
-     *
-     * @return -1
-     */
-    public abstract int intrinsicHeight();
-
-    /**
      * @param canvas 画笔
      * @see #draw(Canvas, RectF)
      * 注： 不能直接使用此方法
@@ -49,7 +35,7 @@ public abstract class IDrawable extends Drawable {
     @Override
     public void draw(@NonNull Canvas canvas) {
         // never use it
-        throw new UnsupportedOperationException("please use #draw(@NonNull Canvas canvas, RectF cell)");
+        throw new UnsupportedOperationException("please use IDrawable#draw(@NonNull Canvas canvas, RectF cell)");
     }
 
     @Override
@@ -67,13 +53,22 @@ public abstract class IDrawable extends Drawable {
         return PixelFormat.TRANSLUCENT;
     }
 
+
+    /**
+     * Return the intrinsic width of the underlying drawable object.  Returns
+     * -1 if it has no intrinsic width, such as with a solid color.
+     */
     @Override
     public int getIntrinsicWidth() {
-        return intrinsicWidth();
+        return -1;
     }
 
+    /**
+     * Return the intrinsic height of the underlying drawable object. Returns
+     * -1 if it has no intrinsic height, such as with a solid color.
+     */
     @Override
     public int getIntrinsicHeight() {
-        return intrinsicHeight();
+        return -1;
     }
 }
