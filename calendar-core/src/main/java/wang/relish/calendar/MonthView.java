@@ -5,9 +5,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.graphics.RectF;
 import android.os.Build;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
@@ -15,8 +13,6 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.orhanobut.logger.Logger;
-
-import java.util.Arrays;
 
 /**
  * 显示月份
@@ -62,12 +58,15 @@ public class MonthView extends View {
     /**
      * 显示的数据
      */
-    protected MonthStyle mMonthStyle;
+//    protected MonthStyle mMonthStyle;
 
     /**
      * 监听器
      */
     private OnSelectListener mListener;
+
+    protected MonthAdapter mAdapter;
+    private MonthAdapter mDefaultAdapter = new DefaultAdapter();
 
     public MonthView(Context context) {
         this(context, null);
@@ -89,7 +88,7 @@ public class MonthView extends View {
     }
 
     private void init() {
-        mMonthStyle = Utils.getMonthStyleDemo();
+//        mMonthStyle = Utils.getMonthStyleDemo();
         setBackgroundColor(Color.WHITE);
     }
 
@@ -110,52 +109,17 @@ public class MonthView extends View {
     protected void onDraw(Canvas canvas) {
         mCellWidth = getWidth() * 1.0F / NUM_COLUMNS;
 
-        DateStyle[] dateStyle = mMonthStyle.getDateStyle();
-        if (dateStyle == null || dateStyle.length != 42)
-            throw new IllegalArgumentException("dateStyle is damaged!:" + Arrays.toString(dateStyle));
-
-        int row;
-        int col;
-        RectF cell;
-
-        for (int i = 0; i < dateStyle.length; i++) {
-            row = i / 7;
-            col = i % 7;
-            float l = col * mCellWidth;
-            float t = row * mCellHeight;
-            cell = new RectF(l, t, l + mCellWidth, t + mCellHeight);
-            DateStyle item = dateStyle[i];
-            if (item == null) continue;
-            // 绘制样式
-            onDrawCell(canvas, cell, item);
+        if (mAdapter != null) {
+            mAdapter.draw(canvas, mCellWidth, mCellHeight);
+        } else {
+            mDefaultAdapter.draw(canvas, mCellWidth, mCellHeight);
         }
     }
-
-    /**
-     * 绘制日期的各种样式
-     *
-     * @param canvas    画布
-     * @param cell      样式绘制的区域
-     * @param dateStyle 日期样式们
-     */
-    public void onDrawCell(Canvas canvas, @NonNull RectF cell, @NonNull DateStyle dateStyle) {
-        // 1 选中样式
-        IDrawable activeDrawable = dateStyle.getActiveDrawable();
-        if (activeDrawable != null) activeDrawable.draw(canvas, cell);
-        // 2 日期文字
-        IDrawable dateDrawable = dateStyle.getDateDrawable();
-        if (dateDrawable != null) dateDrawable.draw(canvas, cell);
-    }
-
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_UP) {
-            int currYear = mMonthStyle.getYear();
-            int currMonth = mMonthStyle.getMonth();
-            int currDay = mMonthStyle.getDay();
-            int weekFirstDay = mMonthStyle.getWeekFirstDay();
             float x = event.getX();
             float y = event.getY();
             int cellX = (int) (x / mCellWidth);
@@ -163,6 +127,17 @@ public class MonthView extends View {
 
             //异常坐标
             if (cellX < 0 || cellX > 7 || cellY < 0 || cellY > 6) return true;
+
+            MonthStyle monthStyle;
+            if (mAdapter == null) {
+                monthStyle = mDefaultAdapter.getMonthStyle();
+            } else {
+                monthStyle = mAdapter.getMonthStyle();
+            }
+            int currYear = monthStyle.getYear();
+            int currMonth = monthStyle.getMonth();
+            int currDay = monthStyle.getDay();
+            int weekFirstDay = monthStyle.getWeekFirstDay();
 
             int preMonthTailDayCount = Utils.preMonthTailDayCount(currYear, currMonth, weekFirstDay);
             Point monthLastDayPoint = Utils.getMonthLastDayPoint(currYear, currMonth, weekFirstDay);
@@ -219,8 +194,14 @@ public class MonthView extends View {
      * @param afterDay 现在选中的日期
      */
     private synchronized void selectedPositionChanged(int afterDay) {
-        if (mMonthStyle.getDay() == afterDay) return;
-        mMonthStyle.setSelectedDay(afterDay);
+        MonthStyle monthStyle;
+        if (mAdapter == null) {
+            monthStyle = mDefaultAdapter.getMonthStyle();
+        } else {
+            monthStyle = mAdapter.getMonthStyle();
+        }
+        if (monthStyle.getDay() == afterDay) return;
+        monthStyle.setSelectedDay(afterDay);
         invalidate();
     }
 
@@ -234,15 +215,11 @@ public class MonthView extends View {
         mListener = listener;
     }
 
-    /**
-     * 设置所有的Item属性
-     *
-     * @param monthStyle Item们的属性
-     */
-    public void setMonthStyle(MonthStyle monthStyle) {
-        mMonthStyle = monthStyle;
+    public void setAdapter(MonthAdapter adapter) {
+        mAdapter = adapter;
         invalidate();
     }
+
 
     @Override
     public void setOnClickListener(@Nullable OnClickListener l) {
