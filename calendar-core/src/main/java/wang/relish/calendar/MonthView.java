@@ -128,12 +128,7 @@ public class MonthView extends View {
             //异常坐标
             if (cellX < 0 || cellX > 7 || cellY < 0 || cellY > 6) return true;
 
-            MonthStyle monthStyle;
-            if (mAdapter == null) {
-                monthStyle = mDefaultAdapter.getMonthStyle();
-            } else {
-                monthStyle = mAdapter.getMonthStyle();
-            }
+            MonthStyle monthStyle = getMonthStyle();
             int currYear = monthStyle.getYear();
             int currMonth = monthStyle.getMonth();
             int currDay = monthStyle.getDay();
@@ -194,12 +189,7 @@ public class MonthView extends View {
      * @param afterDay 现在选中的日期
      */
     private synchronized void selectedPositionChanged(int afterDay) {
-        MonthStyle monthStyle;
-        if (mAdapter == null) {
-            monthStyle = mDefaultAdapter.getMonthStyle();
-        } else {
-            monthStyle = mAdapter.getMonthStyle();
-        }
+        MonthStyle monthStyle = getMonthStyle();
         if (monthStyle.getDay() == afterDay) return;
         monthStyle.setSelectedDay(afterDay);
         invalidate();
@@ -224,5 +214,13 @@ public class MonthView extends View {
     @Override
     public void setOnClickListener(@Nullable OnClickListener l) {
         throw new UnsupportedOperationException("CANNOT do that!");
+    }
+
+    protected MonthStyle getMonthStyle() {
+        if (mAdapter == null) {
+            return mDefaultAdapter.getMonthStyle();
+        } else {
+            return mAdapter.getMonthStyle();
+        }
     }
 }

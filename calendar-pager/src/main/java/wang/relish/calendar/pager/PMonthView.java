@@ -1,16 +1,11 @@
 package wang.relish.calendar.pager;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.RectF;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
-import wang.relish.calendar.DateStyle;
-import wang.relish.calendar.IDrawable;
-import wang.relish.calendar.MonthStyle;
+import wang.relish.calendar.MonthAdapter;
 import wang.relish.calendar.MonthView;
 
 /**
@@ -27,23 +22,9 @@ public class PMonthView extends MonthView implements ITopView {
         super(context, attrs);
     }
 
-
-    @Override
-    public void onDrawCell(Canvas canvas, @NonNull RectF cell, @NonNull DateStyle dateStyle) {
-        PDateStyle pStyle;
-        if (dateStyle instanceof PDateStyle) {
-            pStyle = (PDateStyle) dateStyle;
-        } else {
-            pStyle = PDateStyle.toPDateStyle(dateStyle);
-        }
-        super.onDrawCell(canvas, cell, dateStyle);
-        IDrawable badgeDrawable = pStyle.getBadgeDrawable();
-        if (badgeDrawable != null) badgeDrawable.draw(canvas, cell);
-    }
-
     @Override
     public int getItemTop() {
-        int currSelectedPosition = wang.relish.calendar.Utils.getPositionOfDateInMonthView(mMonthStyle);
+        int currSelectedPosition = wang.relish.calendar.Utils.getPositionOfDateInMonthView(getMonthStyle());
         int selectedLine = currSelectedPosition / 7;
         return (int) (selectedLine * mCellHeight);
     }
@@ -53,10 +34,9 @@ public class PMonthView extends MonthView implements ITopView {
         return (int) mCellHeight;
     }
 
-
     @Override
-    public void setMonthStyle(MonthStyle monthStyle) {
-        super.setMonthStyle(monthStyle);
+    public void setAdapter(MonthAdapter adapter) {
+        super.setAdapter(adapter);
         if (mOnTopViewChangedListener != null) {
             mOnTopViewChangedListener.onLayoutChanged(this);
         }

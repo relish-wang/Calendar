@@ -132,7 +132,6 @@ public class MonthStyle implements Serializable {
         monthStyle.setDateCells(dateStyles);
         monthStyle.setSelectedDay(day);
         return monthStyle;
-
     }
 
     public int getYear() {

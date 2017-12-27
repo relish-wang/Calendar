@@ -38,9 +38,12 @@ public abstract class MonthAdapter<M extends MonthStyle, D extends DateStyle> {
             if (item == null) continue;
             // 绘制样式
             //noinspection unchecked
-            onDrawCell(canvas, cell, (D) item);
+
+            onDrawCell(canvas, cell, transform(item));
         }
     }
+
+    public abstract D transform(DateStyle item);
 
     /**
      * 绘制具体格子数据

@@ -108,7 +108,8 @@ public class MonthPagerAdapter extends RecyclerViewPager.Adapter<MonthPagerAdapt
                     weekFirstDay,
                     mData);//来自使用者传入的数据(某天有xx条待办事项)
         }
-        holder.monthView.setMonthStyle(monthStyle);
+        PMonthAdapter adapter = new PMonthAdapter(monthStyle);
+        holder.monthView.setAdapter(adapter);
         if (mOnSelectListener != null) {
             holder.monthView.setOnSelectListener(mOnSelectListener);
         }

@@ -19,6 +19,11 @@ class DefaultAdapter extends MonthAdapter<MonthStyle, DateStyle> {
     }
 
     @Override
+    public DateStyle transform(DateStyle item) {
+        return item;
+    }
+
+    @Override
     public void onDrawCell(Canvas canvas, @NonNull RectF cell, @NonNull DateStyle dateStyle) {
         // 1 选中样式
         IDrawable activeDrawable = dateStyle.getActiveDrawable();
