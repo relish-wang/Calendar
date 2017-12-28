@@ -94,7 +94,7 @@ public class CalendarHeaderView extends View implements OnChangeDateListener {
     private Paint mPaint;
 
     private void init() {
-        mPaint = new Paint();
+        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     }
 
     private int year, month, day;

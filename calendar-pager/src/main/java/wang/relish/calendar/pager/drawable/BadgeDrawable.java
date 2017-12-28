@@ -39,9 +39,9 @@ public class BadgeDrawable extends IDrawable {
     private static final float CENTER_X_OFFSET = 0.04266666667f;
     /**
      * 根据设计稿上尺寸标注得：
-     * 徽标中心纵向距cell中心为屏幕宽度的30/750,等于0.04
+     * 徽标中心纵向距cell中心为屏幕宽度的32/750,等于0.04266666667
      */
-    private static final float CENTER_Y_OFFSET = 0.04f;
+    private static final float CENTER_Y_OFFSET = 0.04266666667f;
     /**
      * 根据设计稿上颜色标注得：
      * 徽标文字的颜色为#FFFFFF

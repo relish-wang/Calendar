@@ -27,15 +27,15 @@ public class RedPointDrawable extends IDrawable {
 
     /**
      * 根据设计稿上尺寸标注得：
-     * 小红点圆心横向距cell中心为屏幕宽度的22/750,约等于0.02933333333
+     * 小红点圆心横向距cell中心为屏幕宽度的19/750,约等于0.02533333333
      */
-    private static final float CENTER_X_OFFSET = 0.02933333333f;
+    private static final float CENTER_X_OFFSET = 0.02533333333f;
 
     /**
      * 根据设计稿上尺寸标注得：
-     * 小红点圆心纵向距cell中心为屏幕宽度的24/750,约等于0.032
+     * 小红点圆心纵向距cell中心为屏幕宽度的28/750,约等于0.03733333333
      */
-    private static final float CENTER_Y_OFFSET = 0.032f;
+    private static final float CENTER_Y_OFFSET = 0.03733333333f;
     /**
      * 根据设计稿上颜色标注得：
      * 小红点的内圈颜色为#FF0000
@@ -68,14 +68,4 @@ public class RedPointDrawable extends IDrawable {
         mPaint.setColor(RED_POINT_COLOR);
         canvas.drawCircle(centerX, centerY, mInRadius, mPaint);
     }
-
-//    @Override
-//    public int intrinsicWidth() {
-//        return (int) (mOutRadius * 2);
-//    }
-//
-//    @Override
-//    public int intrinsicHeight() {
-//        return (int) (mOutRadius * 2);
-//    }
 }

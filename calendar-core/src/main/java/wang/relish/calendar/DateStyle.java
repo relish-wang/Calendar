@@ -157,7 +157,7 @@ public class DateStyle implements Serializable {
      * 日期文字样式
      */
     public IDrawable getDateDrawable() {
-        return new DateDrawable(text + "", Color.parseColor(textColor), isToday);
+        return new DateDrawable(text + "", Color.parseColor(textColor), isToday, isSelected);
     }
 
     /**

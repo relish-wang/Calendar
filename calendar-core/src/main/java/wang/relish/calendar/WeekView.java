@@ -76,7 +76,7 @@ public final class WeekView extends View {
      */
     private int mWeekFirstDay = Calendar.MONDAY;
 
-    private Paint mPaint = new Paint();
+    private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     public WeekView(Context context) {
         this(context, null);
