@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void addViews() {
         addView("时间范围选择", DateRangePickerActivity.class);
-        addView("日历", CalendarActivity.class);
+        addView("日历Pager", CalendarActivity.class);
     }
 
 
