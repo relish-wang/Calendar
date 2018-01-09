@@ -12,7 +12,7 @@ import java.util.Map;
  * @author Relish Wang
  * @since 2017/11/20
  */
-public class DateStyle implements Serializable {
+public class DateStyle extends Attributes implements Serializable {
 
     public static final String NORMAL_TEXT_COLOR = "#34393F";
     public static final String UNATTAINABLE_TEXT_COLOR = "#CCCCCC";
@@ -158,14 +158,6 @@ public class DateStyle implements Serializable {
      */
     public IDrawable getDateDrawable() {
         return new DateDrawable(text + "", Color.parseColor(textColor), isToday, isSelected);
-    }
-
-    /**
-     * 选中样式
-     */
-    public IDrawable getActiveDrawable() {
-        if (isSelected) return new ActiveDrawable();
-        return null;
     }
 
     @Override

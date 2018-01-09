@@ -5,12 +5,15 @@ import android.graphics.RectF;
 import android.support.annotation.NonNull;
 
 /**
+ * 默认的日历适配器
+ * (只显示日期样式)
+ *
  * @author Relish Wang
  * @since 2017/12/26
  */
-class DefaultAdapter extends MonthAdapter<MonthStyle, DateStyle> {
+class DefaultAdapter extends MonthAdapter {
 
-    public DefaultAdapter() {
+    DefaultAdapter() {
         this(Utils.getMonthStyleDemo());
     }
 
@@ -19,17 +22,12 @@ class DefaultAdapter extends MonthAdapter<MonthStyle, DateStyle> {
     }
 
     @Override
-    public DateStyle transform(DateStyle item) {
-        return item;
+    protected void drawUnderDate(Canvas canvas, @NonNull RectF cell, @NonNull DateStyle dateStyle) {
+
     }
 
     @Override
-    public void onDrawCell(Canvas canvas, @NonNull RectF cell, @NonNull DateStyle dateStyle) {
-        // 1 选中样式
-        IDrawable activeDrawable = dateStyle.getActiveDrawable();
-        if (activeDrawable != null) activeDrawable.draw(canvas, cell);
-        // 2 日期文字
-        IDrawable dateDrawable = dateStyle.getDateDrawable();
-        if (dateDrawable != null) dateDrawable.draw(canvas, cell);
+    protected void drawAboveDate(Canvas canvas, @NonNull RectF cell, @NonNull DateStyle dateStyle) {
+
     }
 }

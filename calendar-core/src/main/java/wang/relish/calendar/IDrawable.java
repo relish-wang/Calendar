@@ -10,7 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 /**
- * 样式基类
+ * 基于日期格子而绘制的样式基类
  *
  * @author Relish Wang
  * @since 2017/11/23

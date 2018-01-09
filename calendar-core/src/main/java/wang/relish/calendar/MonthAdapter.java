@@ -10,16 +10,35 @@ import java.util.Arrays;
  * @author Relish Wang
  * @since 2017/12/26
  */
-public abstract class MonthAdapter<M extends MonthStyle, D extends DateStyle> {
+public abstract class MonthAdapter {
 
-    private M mMonthStyle;
+    private MonthStyle mMonthStyle;
 
-    public MonthAdapter(M monthStyle) {
+    public MonthAdapter(MonthStyle monthStyle) {
         mMonthStyle = monthStyle;
     }
 
+    /**
+     * 绘制在日期下方的样式
+     * 先绘制的在下方
+     *
+     * @param canvas    画布
+     * @param cell      日期格子
+     * @param dateStyle 日期样式
+     */
+    protected abstract void drawUnderDate(Canvas canvas, @NonNull RectF cell, @NonNull DateStyle dateStyle);
 
-    void draw(Canvas canvas, float width, float height) {
+    /**
+     * 绘制在日期上方的样式
+     * 后绘制的在上方
+     *
+     * @param canvas    画布
+     * @param cell      日期格子
+     * @param dateStyle 日期样式
+     */
+    protected abstract void drawAboveDate(Canvas canvas, @NonNull RectF cell, @NonNull DateStyle dateStyle);
+
+    /* package */ void draw(Canvas canvas, float width, float height) {
         DateStyle[] dateStyle = mMonthStyle.getDateStyle();
         if (dateStyle == null || dateStyle.length != 42)
             throw new IllegalArgumentException("dateStyle is damaged!:" + Arrays.toString(dateStyle));
@@ -37,13 +56,10 @@ public abstract class MonthAdapter<M extends MonthStyle, D extends DateStyle> {
             DateStyle item = dateStyle[i];
             if (item == null) continue;
             // 绘制样式
-            //noinspection unchecked
-
-            onDrawCell(canvas, cell, transform(item));
+            onDrawCell(canvas, cell, item);
         }
     }
 
-    public abstract D transform(DateStyle item);
 
     /**
      * 绘制具体格子数据
@@ -52,9 +68,16 @@ public abstract class MonthAdapter<M extends MonthStyle, D extends DateStyle> {
      * @param cell      当前格子
      * @param dateStyle
      */
-    public abstract void onDrawCell(Canvas canvas, @NonNull RectF cell, @NonNull D dateStyle);
+    private void onDrawCell(Canvas canvas, @NonNull RectF cell, @NonNull DateStyle dateStyle) {
+        drawUnderDate(canvas, cell, dateStyle);
 
-    public M getMonthStyle() {
+        IDrawable dateDrawable = dateStyle.getDateDrawable();
+        if (dateDrawable != null) dateDrawable.draw(canvas, cell);
+
+        drawAboveDate(canvas, cell, dateStyle);
+    }
+
+    public MonthStyle getMonthStyle() {
         return mMonthStyle;
     }
 }

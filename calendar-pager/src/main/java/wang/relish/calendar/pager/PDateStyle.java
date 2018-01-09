@@ -2,6 +2,7 @@ package wang.relish.calendar.pager;
 
 import wang.relish.calendar.DateStyle;
 import wang.relish.calendar.IDrawable;
+import wang.relish.calendar.pager.drawable.ActiveDrawable;
 import wang.relish.calendar.pager.drawable.BadgeDrawable;
 import wang.relish.calendar.pager.drawable.RedPointDrawable;
 
@@ -13,6 +14,15 @@ public class PDateStyle extends DateStyle {
 
     public PDateStyle(String text) {
         super(text);
+    }
+
+
+    /**
+     * 选中样式
+     */
+    public IDrawable getActiveDrawable() {
+        if (isSelected) return new ActiveDrawable();
+        return null;
     }
 
     /**

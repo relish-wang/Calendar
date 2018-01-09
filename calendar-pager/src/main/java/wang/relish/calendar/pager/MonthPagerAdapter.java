@@ -83,7 +83,7 @@ public class MonthPagerAdapter extends RecyclerViewPager.Adapter<MonthPagerAdapt
         // 默认的显示样式(仅显示日历，待办事项数为0)
         final MonthStyle monthStyle;
         if (currentPosition == position || currentStage == Stage.FOLD) {
-            monthStyle = MonthStyle.createMonthStyle(
+            monthStyle = Utils.createMonthStyle(
                     mSelectedYear,
                     mSelectedMonth,
                     mSelectedDay,
@@ -101,7 +101,7 @@ public class MonthPagerAdapter extends RecyclerViewPager.Adapter<MonthPagerAdapt
             int month = date.get(Calendar.MONTH);
             int day = date.get(Calendar.DAY_OF_MONTH);
 
-            monthStyle = MonthStyle.createMonthStyle(
+            monthStyle = Utils.createMonthStyle(
                     year,
                     month,
                     day,

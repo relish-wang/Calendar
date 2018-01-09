@@ -1,9 +1,11 @@
-package wang.relish.calendar;
+package wang.relish.calendar.pager.drawable;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
+
+import wang.relish.calendar.IDrawable;
 
 /**
  * 选中的样式
@@ -11,7 +13,7 @@ import android.support.annotation.NonNull;
  * @author wangxin
  * @since 2017/11/23
  */
-/* package */ class ActiveDrawable extends IDrawable {
+public class ActiveDrawable extends IDrawable {
     /**
      * 设计稿上的颜色
      * 被选中日期的圆形背景
@@ -36,14 +38,4 @@ import android.support.annotation.NonNull;
         mRadius = cell.width() * 7 * ACTIVE_DRAWABLE_RADIUS_SCALE;
         canvas.drawCircle(cell.centerX(), cell.centerY(), mRadius, mPaint);
     }
-
-//    @Override
-//    public int intrinsicWidth() {
-//        return (int) (mRadius * 2);
-//    }
-//
-//    @Override
-//    public int intrinsicHeight() {
-//        return (int) (mRadius * 2);
-//    }
 }

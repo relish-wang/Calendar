@@ -13,7 +13,6 @@ import android.support.annotation.NonNull;
  */
 /* package */ class DateDrawable extends IDrawable {
 
-
     /**
      * 根据设计稿上尺寸标注得：
      * 文字大小占屏幕宽度的32/750, 约等于0.04266666667
@@ -39,23 +38,20 @@ import android.support.annotation.NonNull;
     private boolean isToday = false;
     private boolean isSelected = false;
 
-    public DateDrawable(String text, int textColor, boolean isToday, boolean isSelected) {
+    /* package */ DateDrawable(String text, int textColor, boolean isToday, boolean isSelected) {
         this.textColor = textColor;
         this.text = text;
         this.isToday = isToday;
         this.isSelected = isSelected;
     }
 
-    private float textHeight;
-    private float textWidth;
-
     @Override
     public void draw(@NonNull Canvas canvas, RectF cell) {
         float textSize = cell.width() * 7 * (isToday ? TODAY_TEXT_SIZE_SCALE : DATE_TEXT_SIZE_SCALE);
         mPaint.setTextSize(textSize);
         if (isSelected) mPaint.setTypeface(Typeface.DEFAULT_BOLD);
-        textWidth = mPaint.measureText(text);
-        textHeight = mPaint.ascent() + mPaint.descent();
+        float textWidth = mPaint.measureText(text);
+        float textHeight = mPaint.ascent() + mPaint.descent();
         mPaint.setColor(textColor);
         canvas.drawText(text, cell.centerX() - textWidth / 2, cell.centerY() - textHeight / 2, mPaint);
     }

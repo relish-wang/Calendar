@@ -1,6 +1,11 @@
 package wang.relish.calendar.pager;
 
 import java.util.Calendar;
+import java.util.Locale;
+import java.util.Map;
+
+import wang.relish.calendar.DateStyle;
+import wang.relish.calendar.MonthStyle;
 
 /**
  * @author Relish Wang
@@ -107,5 +112,75 @@ public final class Utils extends wang.relish.calendar.Utils {
         }
         calendar.set(y, m, d, 0, 0, 0);
         return calendar;
+    }
+
+
+    public static MonthStyle createMonthStyle(
+            int year,
+            int month,
+            int day,
+            int weekFirstDay,//Calendar.MONDAY
+            Map<String, Integer> dates) {
+        boolean hasOutData = dates != null && dates.size() > 0;
+        MonthStyle monthStyle = new MonthStyle(year, month, day, weekFirstDay);
+        DateStyle[] dateStyles = new DateStyle[42];//默认6行
+        int monthFirstDayDay = wang.relish.calendar.Utils.getMonthFirstDayDay(year, month); //日~六： 1~7
+        int preDay = monthFirstDayDay - weekFirstDay;
+        preDay = preDay < 0 ? preDay + 7 : preDay;
+
+        int preMonthDayCount = wang.relish.calendar.Utils.getPreMonthDayCount(year, month);
+        int j = 0;
+        for (int i = preMonthDayCount - preDay + 1; i <= preMonthDayCount; i++, j++) {
+            int y = month == 0 ? year - 1 : year;
+            int m = month == 0 ? 11 : month - 1;
+            boolean isToday = wang.relish.calendar.Utils.isToday(y, m, i);
+            int badgeNumber = 0;
+            if (hasOutData) {
+                Integer integer = dates.get(String.format(Locale.ENGLISH, "%d%02d%02d", y, m + 1, i));
+                if (integer != null) {
+                    badgeNumber = integer;
+                }
+            }
+            dateStyles[j] = DateStyle.createUnattainableStyle(i + "", badgeNumber, isToday);
+        }
+        int monthDayCount = wang.relish.calendar.Utils.getMonthDayCount(year, month);
+        for (int i = 0; i < monthDayCount; i++, j++) {
+            boolean isToday = wang.relish.calendar.Utils.isToday(year, month, i + 1);
+            boolean isSelected = i + 1 == day;
+            int badgeNumber = 0;
+            if (hasOutData) {
+                Integer integer = dates.get(String.format(Locale.ENGLISH, "%d%02d%02d",
+                        year, month + 1, i + 1));
+                if (integer != null) {
+                    badgeNumber = integer;
+                }
+            }
+            dateStyles[j] = DateStyle.createNormalStyle(
+                    isToday ? "今天" : String.valueOf(i + 1), //"今天" 或 "27"
+                    badgeNumber, // 数字角标
+                    isSelected, //是否选中
+                    isToday); //是否今天(样式相关)
+        }
+        for (int i = 1; j < dateStyles.length; j++, i++) {
+            int y = month == 11 ? year + 1 : year;
+            int m = month == 11 ? 0 : month + 1;
+            boolean isToday = wang.relish.calendar.Utils.isToday(y, m, i);
+            int badgeNumber = 0;
+            if (hasOutData) {
+                Integer integer = dates.get(String.format(Locale.ENGLISH, "%d%02d%02d",
+                        y, m + 1, i));
+                if (integer != null) {
+                    badgeNumber = integer;
+                }
+            }
+            dateStyles[j] = DateStyle.createUnattainableStyle(
+                    isToday ? "今天" : i + "",
+                    badgeNumber,
+                    isToday);
+
+        }
+        monthStyle.setDateCells(dateStyles);
+        monthStyle.setSelectedDay(day);
+        return monthStyle;
     }
 }
