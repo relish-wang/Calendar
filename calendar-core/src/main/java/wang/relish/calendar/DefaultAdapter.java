@@ -11,9 +11,9 @@ import android.support.annotation.NonNull;
  * @author Relish Wang
  * @since 2017/12/26
  */
-class DefaultAdapter extends MonthAdapter {
+public class DefaultAdapter extends MonthAdapter {
 
-    DefaultAdapter() {
+    /* package */ DefaultAdapter() {
         this(Utils.getMonthStyleDemo());
     }
 
@@ -23,11 +23,11 @@ class DefaultAdapter extends MonthAdapter {
 
     @Override
     protected void drawUnderDate(Canvas canvas, @NonNull RectF cell, @NonNull DateStyle dateStyle) {
-
+        // do nothing.
     }
 
     @Override
     protected void drawAboveDate(Canvas canvas, @NonNull RectF cell, @NonNull DateStyle dateStyle) {
-
+        // do nothing.
     }
 }

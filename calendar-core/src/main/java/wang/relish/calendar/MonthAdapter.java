@@ -38,6 +38,13 @@ public abstract class MonthAdapter {
      */
     protected abstract void drawAboveDate(Canvas canvas, @NonNull RectF cell, @NonNull DateStyle dateStyle);
 
+    /**
+     * draw calendar
+     *
+     * @param canvas canvas
+     * @param width  width of each cell
+     * @param height height of each cell
+     */
     /* package */ void draw(Canvas canvas, float width, float height) {
         DateStyle[] dateStyle = mMonthStyle.getDateStyle();
         if (dateStyle == null || dateStyle.length != 42)

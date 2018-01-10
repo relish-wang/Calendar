@@ -1,7 +1,6 @@
 package wang.relish.calendar;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Point;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -9,7 +8,9 @@ import android.view.Display;
 import android.view.WindowManager;
 
 import java.util.Calendar;
-import java.util.Locale;
+
+import static wang.relish.calendar.DateStyle.NORMAL_TEXT_COLOR;
+import static wang.relish.calendar.DateStyle.UNATTAINABLE_TEXT_COLOR;
 
 
 public class Utils {
@@ -71,47 +72,12 @@ public class Utils {
         return new Point(col, row);
     }
 
-    public static int getMonthLastDayPosition(int year, int month, int weekFirstDay) {
+    private static int getMonthLastDayPosition(int year, int month, int weekFirstDay) {
         int preDayCount = preMonthTailDayCount(year, month, weekFirstDay);
         int monthDayCount = getMonthDayCount(year, month);
         return preDayCount + monthDayCount;
     }
 
-    /**
-     * 根据起始-结束时间计算期间月份数量
-     *
-     * @param mMinYear  起始年份
-     * @param mMinMonth 起始年份对应月份
-     * @param mMaxYear  结束年份
-     * @param mMaxMonth 结束年份对应月份
-     * @return 月份数量
-     */
-    public static int getMonthCount(int mMinYear, int mMinMonth, int mMaxYear, int mMaxMonth) {
-        return (mMaxYear - mMinYear) * 12 + (mMaxMonth - mMinMonth) + 1;
-    }
-
-    /**
-     * 根据两个日期（年、月、日）计算天数
-     *
-     * @param sy 开始年份
-     * @param sm 开始月份
-     * @param sd 开始日期
-     * @param ey 结束年份
-     * @param em 结束月份
-     * @param ed 结束日期
-     * @return 天数
-     */
-    public static int getDayCount(int sy, int sm, int sd, int ey, int em, int ed) {
-        if (sy == ey) {
-            return getDayCount(sy, sm, sd, em, ed);
-        }
-        int num = getDayCount(sy, sm, sd, 12, 31);
-        for (int i = sy + 1; i < ey; i++) {
-            num += getYearDays(i);
-        }
-        num += getDayCount(ey, 1, 1, em, ed);
-        return num;
-    }
 
     /**
      * 同一年内，根据月日计算天数
@@ -156,22 +122,6 @@ public class Utils {
      */
     public static boolean isDayCorrect(int year, int month, int day) {
         return month >= 0 && month <= 11 && getMonthDayCount(year, month) >= day && day >= 1;
-    }
-
-    /**
-     * 当前入参日期是否是未来事件
-     *
-     * @param year  年
-     * @param month 月[0,11]
-     * @param day   日
-     * @return 是否为未来
-     */
-    public static boolean isFuture(int year, int month, int day) {
-        Calendar calendar = Calendar.getInstance();
-        int y = calendar.get(Calendar.YEAR);
-        int m = calendar.get(Calendar.MONTH);
-        int d = calendar.get(Calendar.DAY_OF_MONTH);
-        return year > y || year >= y && (month > m || month >= m && day > d);
     }
 
     /**
@@ -373,84 +323,13 @@ public class Utils {
     }
 
     /**
-     * 返回这个日期在这个MonthView的哪个格子
-     *
-     * @param year         年
-     * @param month        月
-     * @param day          日
-     * @param weekFirstDay 一周的第一天是周几
-     * @return 0~41
+     * 样例数据
      */
-
-    public static int getPositionOfDateInMonthView(int year, int month, int day, int weekFirstDay) {
-        if (!Utils.isDayCorrect(year, month, day)) {
-            throw new IllegalArgumentException("no such date: " + year + "/" + month + "/" + day);
-        }
-        int monthFirstDayDay = Utils.getMonthFirstDayDay(year, month); //日~六： 1~7
-        int preDay = monthFirstDayDay - weekFirstDay;
-        preDay = preDay < 0 ? preDay + 7 : preDay;
-        int j = preDay;
-        int monthDayCount = Utils.getMonthDayCount(year, month);
-        for (int i = 0; i < monthDayCount; i++, j++) {
-            if (i + 1 == day) {
-                return j;
-            }
-        }
-        throw new Resources.NotFoundException("DateInMonthViewPosition NOT FOUND: "
-                + String.format(Locale.ENGLISH, "%d/%d/%d %d", year, month, day, weekFirstDay));
-    }
-
-
-    public static Point getPointOfDateInMonthView(int year, int month, int day, int weekFirstDay) {
-        if (!Utils.isDayCorrect(year, month, day)) {
-            throw new IllegalArgumentException("no such date: " + year + "/" + month + "/" + day);
-        }
-        int pos = getPositionOfDateInMonthView(year, month, day, weekFirstDay);
-        return new Point(pos % 7, pos / 7);
-    }
-
-    /**
-     * 当前日期是不是与上个月月尾共享一行
-     */
-    public static boolean isWithinPreMonth(int year, int month, int day, int weekFirstDay) {
-        if (!Utils.isDayCorrect(year, month, day)) {
-            throw new IllegalArgumentException("no such date: " + year + "/" + month + "/" + day);
-        }
-        int position = getPositionOfDateInMonthView(year, month, day, weekFirstDay);
-        return position < 7;
-    }
-
-    /**
-     * 当前日期是不是与下个月月初共享一行
-     */
-    public static boolean isWithinNextMonth(int year, int month, int day, int weekFirstDay) {
-        if (!Utils.isDayCorrect(year, month, day)) {
-            throw new IllegalArgumentException("no such date: " + year + "/" + month + "/" + day);
-        }
-        int position = getPositionOfDateInMonthView(year, month, day, weekFirstDay);
-        int monthLastDayPosition = getMonthLastDayPosition(year, month, weekFirstDay);
-        return (position / 7) == (monthLastDayPosition / 7);
-    }
-
-    public static int getPositionOfDateInMonthView(MonthStyle monthStyle) {
-        return getPositionOfDateInMonthView(monthStyle.getYear(), monthStyle.getMonth(), monthStyle.getDay(), monthStyle.getWeekFirstDay());
-    }
-
-
-    /**
-     * 根据手机的分辨率从 px(像素) 的单位 转成为 dp
-     */
-    public static int px2dip(Context context, float pxValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (pxValue / scale + 0.5f);
-    }
-
-    public static MonthStyle getMonthStyleDemo() {
+    static MonthStyle getMonthStyleDemo() {
         int weekFirstDay = Calendar.MONDAY;//每周的第一天是周？
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
-        int day = 1;
         int monthDayCount = Utils.getMonthDayCount(year, month);
         DateStyle[] dateStyles = new DateStyle[42];//默认6行
         int monthFirstDayDay = Utils.getMonthFirstDayDay(year, month); //日~六： 1~7
@@ -460,23 +339,141 @@ public class Utils {
         int preMonthDayCount = Utils.getPreMonthDayCount(year, month);
         int j = 0;
         for (int i = preMonthDayCount - preDay + 1; i <= preMonthDayCount && j < dateStyles.length; i++, j++) {
-            dateStyles[j] = DateStyle.createUnattainableStyle(i + "", 0, false);
+            dateStyles[j] = new DateStyle(i + "", UNATTAINABLE_TEXT_COLOR);
         }
         for (int i = 0; i < monthDayCount && j < dateStyles.length; i++, j++) {
-            if (i == 0) {
-                dateStyles[j] = DateStyle.createNormalStyle((i + 1) + "", 86, true, true);
-            } else if (i < 5) {
-                dateStyles[j] = DateStyle.createNormalStyle((i + 1) + "", 1, false, false);
-            } else {
-                dateStyles[j] = DateStyle.createNormalStyle((i + 1) + "", 0, false, false);
-            }
+            dateStyles[j] = new DateStyle((i + 1) + "", NORMAL_TEXT_COLOR);
         }
         for (int i = 1; j < dateStyles.length; j++, i++) {
-            dateStyles[j] = DateStyle.createUnattainableStyle(i + "", 0, false);
+            dateStyles[j] = new DateStyle(i + "", UNATTAINABLE_TEXT_COLOR);
         }
-        MonthStyle monthStyle = new MonthStyle(year, month, day, Calendar.MONDAY);
+        MonthStyle monthStyle = new MonthStyle(year, month, Calendar.MONDAY);
         monthStyle.setWeekFirstDay(weekFirstDay);
         monthStyle.setDateCells(dateStyles);
         return monthStyle;
     }
+
+//    /**
+//     * 根据起始-结束时间计算期间月份数量
+//     *
+//     * @param mMinYear  起始年份
+//     * @param mMinMonth 起始年份对应月份
+//     * @param mMaxYear  结束年份
+//     * @param mMaxMonth 结束年份对应月份
+//     * @return 月份数量
+//     */
+//    public static int getMonthCount(int mMinYear, int mMinMonth, int mMaxYear, int mMaxMonth) {
+//        return (mMaxYear - mMinYear) * 12 + (mMaxMonth - mMinMonth) + 1;
+//    }
+
+//    /**
+//     * 根据两个日期（年、月、日）计算天数
+//     *
+//     * @param sy 开始年份
+//     * @param sm 开始月份
+//     * @param sd 开始日期
+//     * @param ey 结束年份
+//     * @param em 结束月份
+//     * @param ed 结束日期
+//     * @return 天数
+//     */
+//    public static int getDayCount(int sy, int sm, int sd, int ey, int em, int ed) {
+//        if (sy == ey) {
+//            return getDayCount(sy, sm, sd, em, ed);
+//        }
+//        int num = getDayCount(sy, sm, sd, 12, 31);
+//        for (int i = sy + 1; i < ey; i++) {
+//            num += getYearDays(i);
+//        }
+//        num += getDayCount(ey, 1, 1, em, ed);
+//        return num;
+//    }
+
+//    public static Point getPointOfDateInMonthView(int year, int month, int day, int weekFirstDay) {
+//        if (!Utils.isDayCorrect(year, month, day)) {
+//            throw new IllegalArgumentException("no such date: " + year + "/" + month + "/" + day);
+//        }
+//        int pos = getPositionOfDateInMonthView(year, month, day, weekFirstDay);
+//        return new Point(pos % 7, pos / 7);
+//    }
+//
+//    /**
+//     * 当前日期是不是与上个月月尾共享一行
+//     */
+//    public static boolean isWithinPreMonth(int year, int month, int day, int weekFirstDay) {
+//        if (!Utils.isDayCorrect(year, month, day)) {
+//            throw new IllegalArgumentException("no such date: " + year + "/" + month + "/" + day);
+//        }
+//        int position = getPositionOfDateInMonthView(year, month, day, weekFirstDay);
+//        return position < 7;
+//    }
+//
+//    /**
+//     * 当前日期是不是与下个月月初共享一行
+//     */
+//    public static boolean isWithinNextMonth(int year, int month, int day, int weekFirstDay) {
+//        if (!Utils.isDayCorrect(year, month, day)) {
+//            throw new IllegalArgumentException("no such date: " + year + "/" + month + "/" + day);
+//        }
+//        int position = getPositionOfDateInMonthView(year, month, day, weekFirstDay);
+//        int monthLastDayPosition = getMonthLastDayPosition(year, month, weekFirstDay);
+//        return (position / 7) == (monthLastDayPosition / 7);
+//    }
+//
+//    public static int getPositionOfDateInMonthView(MonthStyle monthStyle) {
+//        return getPositionOfDateInMonthView(monthStyle.getYear(), monthStyle.getMonth(), monthStyle.getDay(), monthStyle.getWeekFirstDay());
+//    }
+//
+//
+//    /**
+//     * 根据手机的分辨率从 px(像素) 的单位 转成为 dp
+//     */
+//    public static int px2dip(Context context, float pxValue) {
+//        final float scale = context.getResources().getDisplayMetrics().density;
+//        return (int) (pxValue / scale + 0.5f);
+//    }
+
+//    /**
+//     * 返回这个日期在这个MonthView的哪个格子
+//     *
+//     * @param year         年
+//     * @param month        月
+//     * @param day          日
+//     * @param weekFirstDay 一周的第一天是周几
+//     * @return 0~41
+//     */
+//    public static int getPositionOfDateInMonthView(int year, int month, int day, int weekFirstDay) {
+//        if (!Utils.isDayCorrect(year, month, day)) {
+//            throw new IllegalArgumentException("no such date: " + year + "/" + month + "/" + day);
+//        }
+//        int monthFirstDayDay = Utils.getMonthFirstDayDay(year, month); //日~六： 1~7
+//        int preDay = monthFirstDayDay - weekFirstDay;
+//        preDay = preDay < 0 ? preDay + 7 : preDay;
+//        int j = preDay;
+//        int monthDayCount = Utils.getMonthDayCount(year, month);
+//        for (int i = 0; i < monthDayCount; i++, j++) {
+//            if (i + 1 == day) {
+//                return j;
+//            }
+//        }
+//        throw new Resources.NotFoundException("DateInMonthViewPosition NOT FOUND: "
+//                + String.format(Locale.ENGLISH, "%d/%d/%d %d", year, month, day, weekFirstDay));
+//    }
+
+
+//    /**
+//     * 当前入参日期是否是未来事件
+//     *
+//     * @param year  年
+//     * @param month 月[0,11]
+//     * @param day   日
+//     * @return 是否为未来
+//     */
+//    public static boolean isFuture(int year, int month, int day) {
+//        Calendar calendar = Calendar.getInstance();
+//        int y = calendar.get(Calendar.YEAR);
+//        int m = calendar.get(Calendar.MONTH);
+//        int d = calendar.get(Calendar.DAY_OF_MONTH);
+//        return year > y || year >= y && (month > m || month >= m && day > d);
+//    }
 }

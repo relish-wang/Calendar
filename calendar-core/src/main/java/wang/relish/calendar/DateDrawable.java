@@ -2,7 +2,6 @@ package wang.relish.calendar;
 
 import android.graphics.Canvas;
 import android.graphics.RectF;
-import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 
 /**
@@ -35,21 +34,15 @@ import android.support.annotation.NonNull;
      */
     private String text;
 
-    private boolean isToday = false;
-    private boolean isSelected = false;
-
-    /* package */ DateDrawable(String text, int textColor, boolean isToday, boolean isSelected) {
+    /* package */ DateDrawable(String text, int textColor) {
         this.textColor = textColor;
         this.text = text;
-        this.isToday = isToday;
-        this.isSelected = isSelected;
     }
 
     @Override
     public void draw(@NonNull Canvas canvas, RectF cell) {
-        float textSize = cell.width() * 7 * (isToday ? TODAY_TEXT_SIZE_SCALE : DATE_TEXT_SIZE_SCALE);
+        float textSize = cell.width() * 7 * DATE_TEXT_SIZE_SCALE;
         mPaint.setTextSize(textSize);
-        if (isSelected) mPaint.setTypeface(Typeface.DEFAULT_BOLD);
         float textWidth = mPaint.measureText(text);
         float textHeight = mPaint.ascent() + mPaint.descent();
         mPaint.setColor(textColor);

@@ -20,21 +20,11 @@ import com.orhanobut.logger.Logger;
  * @author wangxin
  * @since 2017/3/15
  */
-
 public class MonthView extends View {
-
-    //------------------魔鬼数字相关_start------------------------
     /**
      * 设计稿上一个格子的高度是屏幕宽度的104/750
      */
     public static final float CELL_HEIGHT_SCALE = 0.1386666667f;
-    /**
-     * 设计稿上bottom_padding的高度是屏幕宽度的27/750
-     */
-    private static final float BOTTOM_PADDING_SCALE = 0.036f;
-    //------------------魔鬼数字相关_end------------------------
-
-    //------------------尺寸相关_start-------------------------
     /**
      * 一行有7天
      */
@@ -53,12 +43,6 @@ public class MonthView extends View {
      * 格子高
      */
     protected float mCellHeight;
-    //------------------尺寸相关_end---------------------------
-
-    /**
-     * 显示的数据
-     */
-//    protected MonthStyle mMonthStyle;
 
     /**
      * 监听器
@@ -88,7 +72,6 @@ public class MonthView extends View {
     }
 
     private void init() {
-//        mMonthStyle = Utils.getMonthStyleDemo();
         setBackgroundColor(Color.WHITE);
     }
 
@@ -96,7 +79,6 @@ public class MonthView extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-        float bottomPadding = widthSize * BOTTOM_PADDING_SCALE;
         mCellWidth = widthSize * 1.0f / NUM_COLUMNS;
         mCellHeight = widthSize * CELL_HEIGHT_SCALE;
         int heightSize = (int) (NUM_ROWS * mCellHeight);
@@ -131,7 +113,6 @@ public class MonthView extends View {
             MonthStyle monthStyle = getMonthStyle();
             int currYear = monthStyle.getYear();
             int currMonth = monthStyle.getMonth();
-            int currDay = monthStyle.getDay();
             int weekFirstDay = monthStyle.getWeekFirstDay();
 
             int preMonthTailDayCount = Utils.preMonthTailDayCount(currYear, currMonth, weekFirstDay);
@@ -167,9 +148,7 @@ public class MonthView extends View {
                 }
             } else {
                 int day = cellY * 7 + (cellX + 1) - preMonthTailDayCount;
-                if (day == currDay) return true;
-                // 点击到了中间的日期
-                selectedPositionChanged(day);
+                // 点击到了当月的日期
                 if (mListener != null) {
                     mListener.onCurrMonthDateSelect(this, currYear, currMonth, day);
                     invalidate();
@@ -182,19 +161,6 @@ public class MonthView extends View {
             return true;
         }
     }
-
-    /**
-     * 选中样式变更
-     *
-     * @param afterDay 现在选中的日期
-     */
-    private synchronized void selectedPositionChanged(int afterDay) {
-        MonthStyle monthStyle = getMonthStyle();
-        if (monthStyle.getDay() == afterDay) return;
-        monthStyle.setSelectedDay(afterDay);
-        invalidate();
-    }
-
 
     /**
      * 设置日期选择回调的监听器

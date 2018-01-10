@@ -8,12 +8,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author Relish Wang`
+ * provide expandable ability for DateStyle and MonthStyle
+ *
+ * @author Relish Wang
+ * @see DateStyle
+ * @see MonthStyle
  * @since 2018/01/09
  */
 /* package */class Attributes {
 
-    private Map<String, Object> ext;
+    Map<String, Object> ext;
 
     public void setAttribute(@NonNull String key, boolean value) {
         if (ext == null) ext = new HashMap<>();
@@ -99,5 +103,16 @@ import java.util.Map;
             return (JSONObject) o;
         }
         return null;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("{");
+        for (String key : ext.keySet()) {
+            sb.append("\"").append(key).append("\":\"").append(ext.get(key)).append("\",");
+        }
+        sb.deleteCharAt(sb.length() - 1);
+        sb.append("}");
+        return sb.toString();
     }
 }

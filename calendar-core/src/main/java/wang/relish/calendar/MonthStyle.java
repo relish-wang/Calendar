@@ -1,10 +1,7 @@
 package wang.relish.calendar;
 
-import android.util.Log;
-
 import java.io.Serializable;
 import java.util.Calendar;
-import java.util.Map;
 
 /**
  * 月的样式
@@ -12,7 +9,7 @@ import java.util.Map;
  * @author Relish Wang
  * @since 2017/11/20
  */
-public class MonthStyle<T extends DateStyle> extends Attributes implements Serializable {
+public class MonthStyle extends Attributes implements Serializable {
 
     /**
      * 年份
@@ -22,11 +19,6 @@ public class MonthStyle<T extends DateStyle> extends Attributes implements Seria
      * 月份
      */
     private int month;
-
-    /**
-     * 日(被选中的)
-     */
-    private int day;
 
     /**
      * 周的第一天（默认为周日）
@@ -46,14 +38,11 @@ public class MonthStyle<T extends DateStyle> extends Attributes implements Seria
     /**
      * 日子们
      */
-    private T[] dateCells;
+    private DateStyle[] dateCells;
 
-    private Map<String, Object> ext;
-
-    public MonthStyle(int year, int month, int day, int weekFirstDay) {
+    public MonthStyle(int year, int month, int weekFirstDay) {
         this.year = year;
         this.month = month;
-        this.day = day;
         this.weekFirstDay = weekFirstDay;
     }
 
@@ -65,10 +54,6 @@ public class MonthStyle<T extends DateStyle> extends Attributes implements Seria
         return month;
     }
 
-    public int getDay() {
-        return day;
-    }
-
     public int getWeekFirstDay() {
         return weekFirstDay;
     }
@@ -77,40 +62,15 @@ public class MonthStyle<T extends DateStyle> extends Attributes implements Seria
         this.weekFirstDay = weekFirstDay;
     }
 
-    public T[] getDateCells() {
+    public DateStyle[] getDateCells() {
         return dateCells;
-    }
-
-    /**
-     * 只有本月的日子可以这么设置
-     *
-     * @param day
-     */
-    public void setSelectedDay(int day) {
-        int monthDayCount = Utils.getMonthDayCount(year, month);
-        if (day < 1 || day > monthDayCount) {
-            Log.e("CalendarView", "no such day: " + year + "年" + month + "月" + day + "日");
-            return;
-        }
-        int monthFirstDayDay = Utils.getMonthFirstDayDay(year, month); //日~六： 1~7
-        int preDay = monthFirstDayDay - weekFirstDay;
-        preDay = preDay < 0 ? preDay + 7 : preDay;
-        int oldIndex = preDay + this.day - 1;
-        int index = preDay + day - 1;
-
-        dateCells[oldIndex].setSelected(false);
-        if (Utils.isToday(year, month, day)) {
-            dateCells[oldIndex].setTextColor(DateStyle.ACTIVE_TEXT_COLOR);
-        }
-        dateCells[index].setSelected(true);
-        this.day = day;
     }
 
     public DateStyle[] getDateStyle() {
         return dateCells;
     }
 
-    public void setDateCells(T[] dateCells) {
+    public void setDateCells(DateStyle[] dateCells) {
         this.dateCells = dateCells;
     }
 
