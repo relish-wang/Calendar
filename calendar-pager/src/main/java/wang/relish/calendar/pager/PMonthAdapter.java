@@ -13,30 +13,23 @@ import wang.relish.calendar.MonthStyle;
  * @author Relish Wang
  * @since 2017/12/26
  */
-public class PMonthAdapter extends MonthAdapter<MonthStyle, PDateStyle> {
+public class PMonthAdapter extends MonthAdapter {
 
     public PMonthAdapter(MonthStyle monthStyle) {
         super(monthStyle);
     }
 
     @Override
-    public PDateStyle transform(DateStyle item) {
-        return PDateStyle.toPDateStyle(item);
+    protected void drawUnderDate(Canvas canvas, @NonNull RectF cell, @NonNull DateStyle dateStyle) {
+        // 1 选中样式
+        IDrawable activeDrawable = dateStyle.getDrawable("active");
+        if (activeDrawable != null) activeDrawable.draw(canvas, cell);
     }
 
     @Override
-    public void onDrawCell(Canvas canvas, @NonNull RectF cell, @NonNull PDateStyle pStyle) {
-        // 1 选中样式
-        IDrawable activeDrawable = pStyle.getActiveDrawable();
-        if (activeDrawable != null) activeDrawable.draw(canvas, cell);
-        // 2 日期文字
-        IDrawable dateDrawable = pStyle.getDateDrawable();
-        if (dateDrawable != null) dateDrawable.draw(canvas, cell);
-
-        // TODO 这样不好, 使用者不知道要用👆那两个东西
-
+    protected void drawAboveDate(Canvas canvas, @NonNull RectF cell, @NonNull DateStyle dateStyle) {
         // 3 徽标
-        IDrawable badgeDrawable = pStyle.getBadgeDrawable();
+        IDrawable badgeDrawable = dateStyle.getDrawable("badge");
         if (badgeDrawable != null) badgeDrawable.draw(canvas, cell);
     }
 }

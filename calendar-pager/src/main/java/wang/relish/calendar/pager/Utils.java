@@ -1,5 +1,7 @@
 package wang.relish.calendar.pager;
 
+import android.content.res.Resources;
+
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.Map;
@@ -7,11 +9,14 @@ import java.util.Map;
 import wang.relish.calendar.DateStyle;
 import wang.relish.calendar.MonthStyle;
 
+import static wang.relish.calendar.Utils.getMonthLastDayPosition;
+import static wang.relish.calendar.Utils.getPreMonthTailFirstDate;
+
 /**
  * @author Relish Wang
  * @since 2017/12/23
  */
-public final class Utils extends wang.relish.calendar.Utils {
+public final class Utils {
 
 
     private Utils() {
@@ -40,7 +45,7 @@ public final class Utils extends wang.relish.calendar.Utils {
             Calendar startDate = (Calendar) now.clone();
             now.add(Calendar.DAY_OF_MONTH, 6);
             Calendar endDate = (Calendar) now.clone();
-            return isWithinDateSpan(startDate, endDate, calendar);
+            return wang.relish.calendar.Utils.isWithinDateSpan(startDate, endDate, calendar);
         } else {
             throw new IllegalArgumentException("no such stage: " + stage);
         }
@@ -122,7 +127,8 @@ public final class Utils extends wang.relish.calendar.Utils {
             int weekFirstDay,//Calendar.MONDAY
             Map<String, Integer> dates) {
         boolean hasOutData = dates != null && dates.size() > 0;
-        MonthStyle monthStyle = new MonthStyle(year, month, day, weekFirstDay);
+        MonthStyle monthStyle = new MonthStyle(year, month, weekFirstDay);
+        monthStyle.setAttribute(Constant.KEY_SELECTED_DAY, day);
         DateStyle[] dateStyles = new DateStyle[42];//默认6行
         int monthFirstDayDay = wang.relish.calendar.Utils.getMonthFirstDayDay(year, month); //日~六： 1~7
         int preDay = monthFirstDayDay - weekFirstDay;
@@ -141,7 +147,9 @@ public final class Utils extends wang.relish.calendar.Utils {
                     badgeNumber = integer;
                 }
             }
-            dateStyles[j] = DateStyle.createUnattainableStyle(i + "", badgeNumber, isToday);
+            dateStyles[j] = new DateStyle(i + "", Constant.UNATTAINABLE_TEXT_COLOR);
+            dateStyles[j].setAttribute(Constant.KEY_IS_TODAY, isToday);
+            dateStyles[j].setAttribute(Constant.KEY_BADGE_NUMBER, badgeNumber);
         }
         int monthDayCount = wang.relish.calendar.Utils.getMonthDayCount(year, month);
         for (int i = 0; i < monthDayCount; i++, j++) {
@@ -155,11 +163,16 @@ public final class Utils extends wang.relish.calendar.Utils {
                     badgeNumber = integer;
                 }
             }
-            dateStyles[j] = DateStyle.createNormalStyle(
+            dateStyles[j] = new DateStyle(
                     isToday ? "今天" : String.valueOf(i + 1), //"今天" 或 "27"
-                    badgeNumber, // 数字角标
-                    isSelected, //是否选中
-                    isToday); //是否今天(样式相关)
+                    Constant.NORMAL_TEXT_COLOR
+            );
+            // TODO 这里的逻辑回头要需要理一下
+            // TODO 因为之前是判断几个值的组合 返回一个Drawable的
+            // TODO 现在需要在这里就把这个Drawable设置进去
+            dateStyles[j].setAttribute(Constant.KEY_BADGE_NUMBER, badgeNumber);
+            dateStyles[j].setAttribute(Constant.KEY_IS_SELECTED, isSelected);
+            dateStyles[j].setAttribute(Constant.KEY_IS_TODAY, isToday);
         }
         for (int i = 1; j < dateStyles.length; j++, i++) {
             int y = month == 11 ? year + 1 : year;
@@ -173,14 +186,61 @@ public final class Utils extends wang.relish.calendar.Utils {
                     badgeNumber = integer;
                 }
             }
-            dateStyles[j] = DateStyle.createUnattainableStyle(
+            dateStyles[j] = new DateStyle(
                     isToday ? "今天" : i + "",
-                    badgeNumber,
-                    isToday);
+                    Constant.UNATTAINABLE_TEXT_COLOR);
 
+            dateStyles[j].setAttribute(Constant.KEY_BADGE_NUMBER, badgeNumber);
+            dateStyles[j].setAttribute(Constant.KEY_IS_TODAY, isToday);
         }
         monthStyle.setDateCells(dateStyles);
-        monthStyle.setSelectedDay(day);
         return monthStyle;
+    }
+
+    /**
+     * 当前入参日期是否是未来事件
+     *
+     * @param year  年
+     * @param month 月[0,11]
+     * @param day   日
+     * @return 是否为未来
+     */
+    public static boolean isFuture(int year, int month, int day) {
+        Calendar calendar = Calendar.getInstance();
+        int y = calendar.get(Calendar.YEAR);
+        int m = calendar.get(Calendar.MONTH);
+        int d = calendar.get(Calendar.DAY_OF_MONTH);
+        return year > y || year >= y && (month > m || month >= m && day > d);
+    }
+
+    public static int getPositionOfDateInMonthView(MonthStyle monthStyle) {
+        return getPositionOfDateInMonthView(monthStyle.getYear(), monthStyle.getMonth(), monthStyle.getIntAttribute("selectDay"), monthStyle.getWeekFirstDay());
+    }
+
+    /**
+     * 返回这个日期在这个MonthView的哪个格子
+     *
+     * @param year         年
+     * @param month        月
+     * @param day          日
+     * @param weekFirstDay 一周的第一天是周几
+     * @return 0~41
+     */
+    public static int getPositionOfDateInMonthView(int year, int month, int day, int weekFirstDay) {
+        if (!wang.relish.calendar.Utils.isDayCorrect(year, month, day)) {
+            throw new IllegalArgumentException("no such date: " + year + "/" + month + "/" + day);
+        }
+        int monthFirstDayDay = wang.relish.calendar.Utils.getMonthFirstDayDay(year, month); //日~六： 1~7
+        int preDay = monthFirstDayDay - weekFirstDay;
+        preDay = preDay < 0 ? preDay + 7 : preDay;
+        int j = preDay;
+        int monthDayCount = wang.relish.calendar.Utils.getMonthDayCount(year, month);
+        for (int i = 0; i < monthDayCount; i++, j++) {
+            if (i + 1 == day) {
+                return j;
+            }
+        }
+        throw new Resources.NotFoundException("DateInMonthViewPosition NOT FOUND: "
+                + String.format(Locale.ENGLISH, "%d/%d/%d %d", year, month, day, weekFirstDay));
     }
 }

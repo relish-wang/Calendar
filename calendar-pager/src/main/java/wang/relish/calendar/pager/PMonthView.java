@@ -24,7 +24,7 @@ public class PMonthView extends MonthView implements ITopView {
 
     @Override
     public int getItemTop() {
-        int currSelectedPosition = wang.relish.calendar.Utils.getPositionOfDateInMonthView(getMonthStyle());
+        int currSelectedPosition = Utils.getPositionOfDateInMonthView(getMonthStyle());
         int selectedLine = currSelectedPosition / 7;
         return (int) (selectedLine * mCellHeight);
     }
