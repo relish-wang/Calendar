@@ -18,14 +18,9 @@ public @interface Constant {
 
     String NORMAL_TEXT_COLOR = DateStyle.NORMAL_TEXT_COLOR;
 
-    String KEY_ACTIVE_DRAWABLE = "active";
+    String KEY_ACTIVE_DRAWABLE = "active_drawable";
+    String KEY_BADGE_DRAWABLE = "badge_drawable";
+
 
     String KEY_SELECTED_DAY = "selectDay";
-
-    String KEY_IS_TODAY = "isToday";
-
-    String KEY_BADGE_NUMBER = "badgeNumber";
-
-    String KEY_IS_SELECTED = "isSelected";
-
 }

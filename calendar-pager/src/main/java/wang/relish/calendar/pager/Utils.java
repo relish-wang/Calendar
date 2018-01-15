@@ -8,6 +8,9 @@ import java.util.Map;
 
 import wang.relish.calendar.DateStyle;
 import wang.relish.calendar.MonthStyle;
+import wang.relish.calendar.pager.drawable.ActiveDrawable;
+import wang.relish.calendar.pager.drawable.BadgeDrawable;
+import wang.relish.calendar.pager.drawable.RedPointDrawable;
 
 import static wang.relish.calendar.Utils.getMonthLastDayPosition;
 import static wang.relish.calendar.Utils.getPreMonthTailFirstDate;
@@ -148,8 +151,14 @@ public final class Utils {
                 }
             }
             dateStyles[j] = new DateStyle(i + "", Constant.UNATTAINABLE_TEXT_COLOR);
-            dateStyles[j].setAttribute(Constant.KEY_IS_TODAY, isToday);
-            dateStyles[j].setAttribute(Constant.KEY_BADGE_NUMBER, badgeNumber);
+            if (badgeNumber > 0) {
+                if (isToday) {
+                    dateStyles[j].addDrawable(Constant.KEY_BADGE_DRAWABLE,
+                            new BadgeDrawable(badgeNumber > 99 ? "99+" : (badgeNumber + "")));
+                } else {
+                    dateStyles[j].addDrawable(Constant.KEY_BADGE_DRAWABLE, new RedPointDrawable());
+                }
+            }
         }
         int monthDayCount = wang.relish.calendar.Utils.getMonthDayCount(year, month);
         for (int i = 0; i < monthDayCount; i++, j++) {
@@ -165,14 +174,22 @@ public final class Utils {
             }
             dateStyles[j] = new DateStyle(
                     isToday ? "今天" : String.valueOf(i + 1), //"今天" 或 "27"
-                    Constant.NORMAL_TEXT_COLOR
+                    isSelected ? Constant.ACTIVE_TEXT_COLOR : Constant.NORMAL_TEXT_COLOR
             );
             // TODO 这里的逻辑回头要需要理一下
             // TODO 因为之前是判断几个值的组合 返回一个Drawable的
             // TODO 现在需要在这里就把这个Drawable设置进去
-            dateStyles[j].setAttribute(Constant.KEY_BADGE_NUMBER, badgeNumber);
-            dateStyles[j].setAttribute(Constant.KEY_IS_SELECTED, isSelected);
-            dateStyles[j].setAttribute(Constant.KEY_IS_TODAY, isToday);
+            if (badgeNumber > 0) {
+                if (isToday) {
+                    dateStyles[j].addDrawable(Constant.KEY_BADGE_DRAWABLE,
+                            new BadgeDrawable(badgeNumber > 99 ? "99+" : (badgeNumber + "")));
+                } else {
+                    dateStyles[j].addDrawable(Constant.KEY_BADGE_DRAWABLE, new RedPointDrawable());
+                }
+            }
+            if (isSelected) {
+                dateStyles[j].addDrawable(Constant.KEY_ACTIVE_DRAWABLE, new ActiveDrawable());
+            }
         }
         for (int i = 1; j < dateStyles.length; j++, i++) {
             int y = month == 11 ? year + 1 : year;
@@ -190,8 +207,14 @@ public final class Utils {
                     isToday ? "今天" : i + "",
                     Constant.UNATTAINABLE_TEXT_COLOR);
 
-            dateStyles[j].setAttribute(Constant.KEY_BADGE_NUMBER, badgeNumber);
-            dateStyles[j].setAttribute(Constant.KEY_IS_TODAY, isToday);
+            if (badgeNumber > 0) {
+                if (isToday) {
+                    dateStyles[j].addDrawable(Constant.KEY_BADGE_DRAWABLE,
+                            new BadgeDrawable(badgeNumber > 99 ? "99+" : (badgeNumber + "")));
+                } else {
+                    dateStyles[j].addDrawable(Constant.KEY_BADGE_DRAWABLE, new RedPointDrawable());
+                }
+            }
         }
         monthStyle.setDateCells(dateStyles);
         return monthStyle;

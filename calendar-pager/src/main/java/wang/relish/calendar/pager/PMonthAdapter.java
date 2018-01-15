@@ -15,21 +15,21 @@ import wang.relish.calendar.MonthStyle;
  */
 public class PMonthAdapter extends MonthAdapter {
 
-    public PMonthAdapter(MonthStyle monthStyle) {
+    PMonthAdapter(MonthStyle monthStyle) {
         super(monthStyle);
     }
 
     @Override
     protected void drawUnderDate(Canvas canvas, @NonNull RectF cell, @NonNull DateStyle dateStyle) {
         // 1 选中样式
-        IDrawable activeDrawable = dateStyle.getDrawable("active");
+        IDrawable activeDrawable = dateStyle.getDrawable(Constant.KEY_ACTIVE_DRAWABLE);
         if (activeDrawable != null) activeDrawable.draw(canvas, cell);
     }
 
     @Override
     protected void drawAboveDate(Canvas canvas, @NonNull RectF cell, @NonNull DateStyle dateStyle) {
         // 3 徽标
-        IDrawable badgeDrawable = dateStyle.getDrawable("badge");
+        IDrawable badgeDrawable = dateStyle.getDrawable(Constant.KEY_BADGE_DRAWABLE);
         if (badgeDrawable != null) badgeDrawable.draw(canvas, cell);
     }
 }

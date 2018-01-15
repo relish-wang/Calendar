@@ -12,13 +12,13 @@ import wang.relish.calendar.MonthView;
  * @author Relish Wang
  * @since 2017/12/23
  */
-public class PMonthView extends MonthView implements ITopView {
+public class FoldableMonthView extends MonthView implements ITopView {
 
-    public PMonthView(Context context) {
+    public FoldableMonthView(Context context) {
         super(context);
     }
 
-    public PMonthView(Context context, @Nullable AttributeSet attrs) {
+    public FoldableMonthView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 

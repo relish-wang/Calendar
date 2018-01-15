@@ -129,7 +129,7 @@ public class MonthPagerAdapter extends RecyclerViewPager.Adapter<MonthPagerAdapt
 
     class MonthHolder extends RecyclerViewPager.ViewHolder {
 
-        PMonthView monthView;
+        FoldableMonthView monthView;
 
         private MonthHolder(View itemView) {
             super(itemView);
