@@ -20,13 +20,9 @@ public class CalendarActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Map<String, Integer> dateEvents = new HashMap<>();
-        dateEvents.put("20171226", 99);
-        dateEvents.put("20171227", 99);
-        dateEvents.put("20171228", 99);
-        dateEvents.put("20171229", 99);
-        dateEvents.put("20171230", 99);
-        dateEvents.put("20171231", 99);
-        dateEvents.put("20180101", 99);
+        for (int i = 16; i < 31; i++) {
+            dateEvents.put("201801" + i, 999);
+        }
 
         CalendarView view = new CalendarView(this);
         view.setWeekFirstDay(Calendar.THURSDAY);

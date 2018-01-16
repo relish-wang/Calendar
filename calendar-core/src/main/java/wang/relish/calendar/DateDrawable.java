@@ -34,14 +34,23 @@ import android.support.annotation.NonNull;
      */
     private String text;
 
-    /* package */ DateDrawable(String text, int textColor) {
+    /**
+     * 文字大小(单位px)
+     */
+    private int textSize;
+
+    /* package */ DateDrawable(String text, int textColor, int textSize) {
         this.textColor = textColor;
         this.text = text;
+        this.textSize = textSize;
     }
 
     @Override
     public void draw(@NonNull Canvas canvas, RectF cell) {
         float textSize = cell.width() * 7 * DATE_TEXT_SIZE_SCALE;
+        if (this.textSize != 0) {
+            textSize = this.textSize;
+        }
         mPaint.setTextSize(textSize);
         float textWidth = mPaint.measureText(text);
         float textHeight = mPaint.ascent() + mPaint.descent();

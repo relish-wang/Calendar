@@ -79,7 +79,7 @@ public class DateStyle extends Attributes implements Serializable {
      * 日期文字样式
      */
     public IDrawable getDateDrawable() {
-        return new DateDrawable(text + "", Color.parseColor(textColor));
+        return new DateDrawable(text + "", Color.parseColor(textColor), 0);
     }
 
     @Override
