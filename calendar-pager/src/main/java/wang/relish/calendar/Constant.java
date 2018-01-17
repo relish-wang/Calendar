@@ -1,6 +1,4 @@
-package wang.relish.calendar.pager;
-
-import wang.relish.calendar.DateStyle;
+package wang.relish.calendar;
 
 /**
  * @author Relish Wang
@@ -23,4 +21,6 @@ public @interface Constant {
 
 
     String KEY_SELECTED_DAY = "selectDay";
+    float NORMAL_TEXT_SIZE = DateDrawable.DATE_TEXT_SIZE_SCALE;
+    float TODAY_TEXT_SIZE = DateDrawable.TODAY_TEXT_SIZE_SCALE;
 }

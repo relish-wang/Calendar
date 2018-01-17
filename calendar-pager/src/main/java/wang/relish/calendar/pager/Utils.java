@@ -6,8 +6,8 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.Map;
 
+import wang.relish.calendar.Constant;
 import wang.relish.calendar.DateStyle;
-import wang.relish.calendar.IDrawable;
 import wang.relish.calendar.MonthStyle;
 import wang.relish.calendar.pager.drawable.ActiveDrawable;
 import wang.relish.calendar.pager.drawable.BadgeDrawable;
@@ -151,7 +151,12 @@ public final class Utils {
                     badgeNumber = integer;
                 }
             }
-            dateStyles[j] = new DateStyle(i + "", Constant.UNATTAINABLE_TEXT_COLOR);
+            //TODO normal:15sp today:12sp
+            dateStyles[j] = new DateStyle(
+                    i + "",
+                    isToday ? Constant.ACTIVE_TEXT_COLOR : Constant.NORMAL_TEXT_COLOR,
+                    isToday ? Constant.TODAY_TEXT_SIZE : Constant.NORMAL_TEXT_SIZE
+            );
             if (badgeNumber > 0) {
                 if (isToday) {
                     dateStyles[j].addDrawable(Constant.KEY_BADGE_DRAWABLE,
@@ -175,14 +180,9 @@ public final class Utils {
             }
             dateStyles[j] = new DateStyle(
                     isToday ? "今天" : String.valueOf(i + 1), //"今天" 或 "27"
-                    isSelected ? Constant.ACTIVE_TEXT_COLOR : Constant.NORMAL_TEXT_COLOR
-            ) {
-                @Override
-                public IDrawable getDateDrawable() {
-                    // TODO "今天"的字体要小
-                    return super.getDateDrawable();
-                }
-            };
+                    isSelected || isToday ? Constant.ACTIVE_TEXT_COLOR : Constant.NORMAL_TEXT_COLOR,
+                    isToday ? Constant.TODAY_TEXT_SIZE : Constant.NORMAL_TEXT_SIZE
+            );
             // TODO 这里的逻辑回头要需要理一下
             // TODO 因为之前是判断几个值的组合 返回一个Drawable的
             // TODO 现在需要在这里就把这个Drawable设置进去
@@ -212,7 +212,9 @@ public final class Utils {
             }
             dateStyles[j] = new DateStyle(
                     isToday ? "今天" : i + "",
-                    Constant.UNATTAINABLE_TEXT_COLOR);
+                    isToday ? Constant.ACTIVE_TEXT_COLOR : Constant.NORMAL_TEXT_COLOR,
+                    isToday ? Constant.TODAY_TEXT_SIZE : Constant.NORMAL_TEXT_SIZE
+            );
 
             if (badgeNumber > 0) {
                 if (isToday) {

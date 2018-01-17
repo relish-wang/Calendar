@@ -35,6 +35,11 @@ public class DateStyle extends Attributes implements Serializable {
     private String text = "1";
 
     /**
+     * 文字大小与屏宽的比例
+     */
+    private float textSizeScale;
+
+    /**
      * 格子上的样式
      */
     private Map<String, IDrawable> drawables;
@@ -43,6 +48,12 @@ public class DateStyle extends Attributes implements Serializable {
     public DateStyle(String text, String textColor) {
         this.text = text;
         this.textColor = textColor;
+    }
+
+    public DateStyle(String text, String textColor, float textSizeScale) {
+        this.text = text;
+        this.textColor = textColor;
+        this.textSizeScale = textSizeScale;
     }
 
     public String getTextColor() {
@@ -79,7 +90,7 @@ public class DateStyle extends Attributes implements Serializable {
      * 日期文字样式
      */
     public IDrawable getDateDrawable() {
-        return new DateDrawable(text + "", Color.parseColor(textColor), 0);
+        return new DateDrawable(text + "", Color.parseColor(textColor), textSizeScale);
     }
 
     @Override

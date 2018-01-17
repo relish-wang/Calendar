@@ -16,13 +16,13 @@ import android.support.annotation.NonNull;
      * 根据设计稿上尺寸标注得：
      * 文字大小占屏幕宽度的32/750, 约等于0.04266666667
      */
-    private static final float DATE_TEXT_SIZE_SCALE = 0.04266666667f;
+    /* package */ static final float DATE_TEXT_SIZE_SCALE = 0.04266666667f;
 
     /**
      * 根据设计稿上尺寸标注得：
      * 今天文字大小占屏幕宽度的24/750, 等于0.032
      */
-    private static final float TODAY_TEXT_SIZE_SCALE = 0.032f;
+    /* package */ static final float TODAY_TEXT_SIZE_SCALE = 0.032f;
 
     /**
      * 文字颜色
@@ -35,21 +35,21 @@ import android.support.annotation.NonNull;
     private String text;
 
     /**
-     * 文字大小(单位px)
+     * 文字大小与屏宽的比例
      */
-    private int textSize;
+    private float textSizeScale;
 
-    /* package */ DateDrawable(String text, int textColor, int textSize) {
+    /* package */ DateDrawable(String text, int textColor, float textSizeScale) {
         this.textColor = textColor;
         this.text = text;
-        this.textSize = textSize;
+        this.textSizeScale = textSizeScale;
     }
 
     @Override
     public void draw(@NonNull Canvas canvas, RectF cell) {
         float textSize = cell.width() * 7 * DATE_TEXT_SIZE_SCALE;
-        if (this.textSize != 0) {
-            textSize = this.textSize;
+        if (this.textSizeScale != 0) {
+            textSize = cell.width() * 7 * this.textSizeScale;
         }
         mPaint.setTextSize(textSize);
         float textWidth = mPaint.measureText(text);
