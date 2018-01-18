@@ -154,7 +154,7 @@ public final class Utils {
             //TODO normal:15sp today:12sp
             dateStyles[j] = new DateStyle(
                     i + "",
-                    isToday ? Constant.ACTIVE_TEXT_COLOR : Constant.NORMAL_TEXT_COLOR,
+                    isToday ? Constant.ACTIVE_TEXT_COLOR : Constant.UNATTAINABLE_TEXT_COLOR,
                     isToday ? Constant.TODAY_TEXT_SIZE : Constant.NORMAL_TEXT_SIZE
             );
             if (badgeNumber > 0) {
@@ -212,7 +212,7 @@ public final class Utils {
             }
             dateStyles[j] = new DateStyle(
                     isToday ? "今天" : i + "",
-                    isToday ? Constant.ACTIVE_TEXT_COLOR : Constant.NORMAL_TEXT_COLOR,
+                    isToday ? Constant.ACTIVE_TEXT_COLOR : Constant.UNATTAINABLE_TEXT_COLOR,
                     isToday ? Constant.TODAY_TEXT_SIZE : Constant.NORMAL_TEXT_SIZE
             );
 
