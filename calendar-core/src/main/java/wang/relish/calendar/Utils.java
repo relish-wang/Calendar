@@ -356,6 +356,22 @@ public final class Utils {
         return monthStyle;
     }
 
+    /**
+     * 获得这个月需显示几行
+     *
+     * @param year         当前日
+     * @param month        当前月
+     * @param weekFirstDay 一周的第一天是周几
+     * @return 4 | 5| 6
+     */
+    public static int getMonthRowCount(int year, int month, int weekFirstDay) {
+        int monthDayCount = getMonthDayCount(year, month);
+        int preMonthTailDayCount = preMonthTailDayCount(year, month, weekFirstDay);
+        boolean isDivideExactly = (monthDayCount + preMonthTailDayCount) % 7 == 0;
+        int row = (monthDayCount + preMonthTailDayCount) / 7;
+        return isDivideExactly ? row : row + 1;
+    }
+
 //    /**
 //     * 根据起始-结束时间计算期间月份数量
 //     *

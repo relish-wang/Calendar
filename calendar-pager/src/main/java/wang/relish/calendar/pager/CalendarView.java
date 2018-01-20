@@ -9,6 +9,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.TintTypedArray;
 import android.util.AttributeSet;
@@ -75,11 +77,11 @@ public class CalendarView extends LinearLayout {
      * 数据
      */
     private Map<String, Integer> mData = new HashMap<>();
-    private MonthPagerAdapter mMonthAdapter;
+    private MPagerAdapter mMonthAdapter;
     /**
      * 展示月份的ViewPager
      */
-    private MonthPager mMonthPager;
+    private MPager mMPager;
 
     protected FrameLayout mContentRootLayout;
 
@@ -124,8 +126,8 @@ public class CalendarView extends LinearLayout {
         mCalendarLayout = mLlRoot.findViewById(R.id.calendar_layout);
         mContentRootLayout = mLlRoot.findViewById(R.id.rl_content);
 
-        mMonthPager = mLlRoot.findViewById(R.id.vp_month);
-        mMonthAdapter = new MonthPagerAdapter(mData, new OnSelectListener() {
+        mMPager = mLlRoot.findViewById(R.id.vp_month);
+        mMonthAdapter = new MPagerAdapter(((AppCompatActivity)getContext()).getSupportFragmentManager(),mData, new OnSelectListener() {
             @Override
             public void onPrevMonthDateSelect(MonthView monthView, int year, int month, int day) {
                 if (mCurrYear == year && mCurrMonth == month && mCurrDay == day) return;
@@ -134,12 +136,12 @@ public class CalendarView extends LinearLayout {
                 mCurrDay = day;
                 onChangeDate(getContext(), mCurrYear, mCurrMonth, mCurrDay);
 
-                final int currentItem = mMonthPager.getCurrentPosition();
-                mMonthPager.post(new Runnable() {
+                final int currentItem = mMPager.getCurrentItem();
+                mMPager.post(new Runnable() {
                     @Override
                     public void run() {
                         isManuallySlided = false;
-                        mMonthPager.smoothScrollToPosition(currentItem - 1);
+                        mMPager.setCurrentItem(currentItem - 1,true);
                     }
                 });
             }
@@ -164,16 +166,16 @@ public class CalendarView extends LinearLayout {
 
                 onChangeDate(getContext(), year, month, day);
 
-                final int currentItem = mMonthPager.getCurrentPosition();
-                mMonthPager.post(new Runnable() {
+                final int currentItem = mMPager.getCurrentItem();
+                mMPager.post(new Runnable() {
                     @Override
                     public void run() {
                         isManuallySlided = false;
-                        mMonthPager.smoothScrollToPosition(currentItem + 1);
+                        mMPager.setCurrentItem(currentItem + 1,true);
                     }
                 });
             }
-        }, new MonthPagerAdapter.CurrentPositionGetter() {
+        }, new MPagerAdapter.CurrentPositionGetter() {
 
             @Override
             public int getCurrentPosition() {
@@ -190,12 +192,24 @@ public class CalendarView extends LinearLayout {
                 return mWeekFirstDay;
             }
         });
-        mMonthPager.setAdapter(mMonthAdapter);
-        mMonthPager.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        mMonthPager.scrollToPosition(Integer.MAX_VALUE >> 1);
-        mMonthPager.addOnPageChangedListener(new RecyclerViewPager.OnPageChangedListener() {
+        mMPager.setAdapter(mMonthAdapter);
+//        mMPager.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        mMPager.setCurrentItem(Integer.MAX_VALUE >> 1);
+        mMPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                onPageChanged(currentPosition,position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+
             public void onPageChanged(int oldPosition, int newPosition) {
                 if (oldPosition == newPosition) return;
                 currentPosition = newPosition;
@@ -218,7 +232,7 @@ public class CalendarView extends LinearLayout {
                 if (mOnChangePageListener != null) {
                     mOnChangePageListener.onChangePage(getContext(), mCurrYear, mCurrMonth, mCurrDay);
                 }
-                mMonthPager.post(new Runnable() {
+                mMPager.post(new Runnable() {
                     @Override
                     public void run() {
                         mMonthAdapter.selectDate(mCurrYear, mCurrMonth, mCurrDay);
@@ -324,16 +338,16 @@ public class CalendarView extends LinearLayout {
 
         boolean isCurrentPage = Utils.isWithinMonthViewPage(calendar, stage, mCurrYear, mCurrMonth, mCurrDay, mWeekFirstDay);
 
-        final int currentPosition = mMonthPager.getCurrentPosition();
+        final int currentPosition = mMPager.getCurrentItem();
         if (!isCurrentPage) {
-            mMonthPager.post(new Runnable() {
+            mMPager.post(new Runnable() {
                 @Override
                 public void run() {
                     isManuallySlided = false;
                     if (isFuture) {
-                        mMonthPager.smoothScrollToPosition(currentPosition - 2);
+                        mMPager.setCurrentItem(currentPosition - 2,true);
                     } else {
-                        mMonthPager.smoothScrollToPosition(currentPosition + 2);
+                        mMPager.setCurrentItem(currentPosition + 2,true);
                     }
                     onChangeDate(getContext(), mCurrYear, mCurrMonth, mCurrDay);
                 }

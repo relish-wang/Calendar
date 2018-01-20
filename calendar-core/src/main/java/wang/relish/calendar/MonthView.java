@@ -33,7 +33,7 @@ public class MonthView extends View {
      * 一个月有多少行（可能4行或5行或6行）
      * 参考钉钉是固定6行的
      */
-    private static final int NUM_ROWS = 6;
+    private int NUM_ROWS = 6;
 
     /**
      * 格子宽
@@ -81,6 +81,11 @@ public class MonthView extends View {
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
         mCellWidth = widthSize * 1.0f / NUM_COLUMNS;
         mCellHeight = widthSize * CELL_HEIGHT_SCALE;
+        if(mAdapter!=null) {
+            NUM_ROWS = mAdapter.getRow();
+        }else{
+            NUM_ROWS = mDefaultAdapter.getRow();
+        }
         int heightSize = (int) (NUM_ROWS * mCellHeight);
         int measureSpec = MeasureSpec.makeMeasureSpec(widthSize, widthMode);
         setMeasuredDimension(measureSpec, heightSize);

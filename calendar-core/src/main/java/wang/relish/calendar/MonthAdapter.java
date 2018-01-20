@@ -73,7 +73,7 @@ public abstract class MonthAdapter {
      *
      * @param canvas    画布
      * @param cell      当前格子
-     * @param dateStyle
+     * @param dateStyle 日期格子内所有样式
      */
     private void onDrawCell(Canvas canvas, @NonNull RectF cell, @NonNull DateStyle dateStyle) {
         drawUnderDate(canvas, cell, dateStyle);
@@ -82,6 +82,10 @@ public abstract class MonthAdapter {
         if (dateDrawable != null) dateDrawable.draw(canvas, cell);
 
         drawAboveDate(canvas, cell, dateStyle);
+    }
+
+    protected int getRow() {
+        return Utils.getMonthRowCount(mMonthStyle.getYear(), mMonthStyle.getMonth(), mMonthStyle.getWeekFirstDay());
     }
 
     public MonthStyle getMonthStyle() {

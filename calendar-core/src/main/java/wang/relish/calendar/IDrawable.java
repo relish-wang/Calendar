@@ -9,13 +9,15 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.io.Serializable;
+
 /**
  * 基于日期格子而绘制的样式基类
  *
  * @author Relish Wang
  * @since 2017/11/23
  */
-public abstract class IDrawable extends Drawable {
+public abstract class IDrawable extends Drawable implements Serializable{
 
     protected Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
