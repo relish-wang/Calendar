@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,7 +16,7 @@ import java.util.Map;
  * @see MonthStyle
  * @since 2018/01/09
  */
-/* package */class Attributes {
+/* package */class Attributes implements Serializable {
 
     Map<String, Object> ext;
 
@@ -65,7 +66,8 @@ import java.util.Map;
         if (ext == null || ext.size() == 0) return defVal;
         Object o = ext.get(key);
         if (o instanceof Integer) {
-            return (int) o;
+            int o1 = (int) o;
+            return o1 == 0 ? defVal : o1;
         }
         return defVal;
     }
@@ -107,6 +109,7 @@ import java.util.Map;
 
     @Override
     public String toString() {
+        if (ext == null) return "{}";
         StringBuilder sb = new StringBuilder("{");
         for (String key : ext.keySet()) {
             sb.append("\"").append(key).append("\":\"").append(ext.get(key)).append("\",");

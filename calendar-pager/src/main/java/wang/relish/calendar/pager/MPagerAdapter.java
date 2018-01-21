@@ -4,8 +4,10 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.Map;
 
 import wang.relish.calendar.MonthStyle;
@@ -19,12 +21,15 @@ public class MPagerAdapter extends FragmentPagerAdapter {
 
     private int mSelectedYear, mSelectedMonth, mSelectedDay;
 
-    private Map<String,Integer> mData;
+    private Map<String, Integer> mData;
     private OnSelectListener mListener;
     private MPagerAdapter.CurrentPositionGetter mPositionGetter;
 
+    private FragmentManager fm;
+
     public MPagerAdapter(FragmentManager manager, Map<String, Integer> data, @NonNull OnSelectListener listener, @NonNull MPagerAdapter.CurrentPositionGetter positionGetter) {
         super(manager);
+        fm = manager;
         mData = data;
         mListener = listener;
         mPositionGetter = positionGetter;
@@ -74,7 +79,7 @@ public class MPagerAdapter extends FragmentPagerAdapter {
                     mData);//来自使用者传入的数据(某天有xx条待办事项)
         }
         MonthFragment fragment = MonthFragment.newInstance(monthStyle);
-        if(mListener!=null)fragment.setOnSelectListener(mListener);
+        if (mListener != null) fragment.setOnSelectListener(mListener);
         if (mOnTopViewChangedListener != null) {
             fragment.setOnTopViewChangedListener(mOnTopViewChangedListener);
         }
@@ -86,6 +91,27 @@ public class MPagerAdapter extends FragmentPagerAdapter {
         mSelectedMonth = month;
         mSelectedDay = day;
         notifyDataSetChanged();
+    }
+
+    @Override
+    public void notifyDataSetChanged() {
+        List<Fragment> fragments = fm.getFragments();
+        if (fragments != null) {
+            FragmentTransaction ft = fm.beginTransaction();
+            for (Fragment f : fragments) {
+                ft.remove(f);
+            }
+            ft.commit();
+            //noinspection UnusedAssignment
+            ft = null;
+            fm.executePendingTransactions();
+        }
+        super.notifyDataSetChanged();
+    }
+
+    @Override
+    public int getItemPosition(@NonNull Object object) {
+        return POSITION_NONE;
     }
 
     public void setNewData(Map<String, Integer> newData) {

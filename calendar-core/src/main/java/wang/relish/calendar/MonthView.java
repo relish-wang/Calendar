@@ -2,6 +2,7 @@ package wang.relish.calendar;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.database.DataSetObserver;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -29,11 +30,6 @@ public class MonthView extends View {
      * 一行有7天
      */
     private static final int NUM_COLUMNS = 7;
-    /**
-     * 一个月有多少行（可能4行或5行或6行）
-     * 参考钉钉是固定6行的
-     */
-    private int NUM_ROWS = 6;
 
     /**
      * 格子宽
@@ -81,12 +77,16 @@ public class MonthView extends View {
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
         mCellWidth = widthSize * 1.0f / NUM_COLUMNS;
         mCellHeight = widthSize * CELL_HEIGHT_SCALE;
-        if(mAdapter!=null) {
-            NUM_ROWS = mAdapter.getRow();
-        }else{
-            NUM_ROWS = mDefaultAdapter.getRow();
+
+        //一个月有多少行（可能4行或5行或6行）
+        //参考钉钉是固定6行的
+        int numRows = 6;
+        if (mAdapter != null) {
+            numRows = mAdapter.getRow();
+        } else {
+            numRows = mDefaultAdapter.getRow();
         }
-        int heightSize = (int) (NUM_ROWS * mCellHeight);
+        int heightSize = (int) (numRows * mCellHeight);
         int measureSpec = MeasureSpec.makeMeasureSpec(widthSize, widthMode);
         setMeasuredDimension(measureSpec, heightSize);
     }
@@ -176,9 +176,20 @@ public class MonthView extends View {
         mListener = listener;
     }
 
+    private MonthObserver mObserver;
+
     public void setAdapter(MonthAdapter adapter) {
-        mAdapter = adapter;
-        invalidate();
+        if (adapter != null && mObserver != null) {
+            adapter.unregisterDataSetObserver(mObserver);
+        }
+        if (adapter != null) {
+            mObserver = new MonthObserver();
+            adapter.registerDataSetObserver(mObserver);
+
+            mAdapter = adapter;
+            invalidate();
+        }
+        requestLayout();
     }
 
 
@@ -187,11 +198,30 @@ public class MonthView extends View {
         throw new UnsupportedOperationException("CANNOT do that!");
     }
 
-    protected MonthStyle getMonthStyle() {
+    public MonthStyle getMonthStyle() {
         if (mAdapter == null) {
             return mDefaultAdapter.getMonthStyle();
         } else {
             return mAdapter.getMonthStyle();
         }
+    }
+
+    private class MonthObserver extends DataSetObserver {
+        MonthObserver() {
+        }
+
+        @Override
+        public void onChanged() {
+            dataSetChanged();
+        }
+
+        @Override
+        public void onInvalidated() {
+            dataSetChanged();
+        }
+    }
+
+    void dataSetChanged() {
+        requestLayout();
     }
 }

@@ -10,13 +10,14 @@ import android.view.ViewGroup;
 
 import wang.relish.calendar.MonthAdapter;
 import wang.relish.calendar.MonthStyle;
+import wang.relish.calendar.MonthView;
 import wang.relish.calendar.OnSelectListener;
 
 /**
  * @author Relish Wang
  * @since 2018/01/21
  */
-public class MonthFragment extends Fragment {
+public class MonthFragment extends Fragment implements OnSelectListener, ITopView.OnTopViewChangedListener {
     private static final String KEY_MONTH_STYLE = "monthStyle";
 
 
@@ -45,11 +46,13 @@ public class MonthFragment extends Fragment {
         if (arguments != null) {
             mMonthStyle = (MonthStyle) arguments.getSerializable(KEY_MONTH_STYLE);
         }
-        if (mMonthStyle == null) this.onDestroy();
+        if (mMonthStyle == null) mMonthStyle = mMonthView.getMonthStyle();
 
         mMonthView = view.findViewById(R.id.mv);
         mAdapter = new PMonthAdapter(mMonthStyle);
         mMonthView.setAdapter(mAdapter);
+        mMonthView.setOnSelectListener(this);
+        mMonthView.setOnSelectListener(this);
     }
 
     @Override
@@ -58,15 +61,41 @@ public class MonthFragment extends Fragment {
         if (mMonthView != null) mMonthView.invalidate();
     }
 
-    public void setOnSelectListener(OnSelectListener listener) {
-        if (mMonthView != null) {
-            mMonthView.setOnSelectListener(listener);
+    private OnSelectListener mOnSelectListener;
+
+    public void setOnSelectListener(@Nullable OnSelectListener listener) {
+        mOnSelectListener = listener;
+    }
+
+    private ITopView.OnTopViewChangedListener mOnTopViewChangedListenr;
+
+    public void setOnTopViewChangedListener(@Nullable ITopView.OnTopViewChangedListener listener) {
+        mOnTopViewChangedListenr = listener;
+    }
+
+    @Override
+    public void onCurrMonthDateSelect(MonthView monthView, int year, int month, int day) {
+        if (mOnSelectListener != null) {
+            mOnSelectListener.onCurrMonthDateSelect(monthView, year, month, day);
         }
     }
 
-    public void setOnTopViewChangedListener(ITopView.OnTopViewChangedListener onTopViewChangedListener) {
-        if (mMonthView != null) {
-            mMonthView.setOnTopViewChangedListener(onTopViewChangedListener);
+    @Override
+    public void onPrevMonthDateSelect(MonthView monthView, int year, int month, int day) {
+        if (mOnSelectListener != null) {
+            mOnSelectListener.onPrevMonthDateSelect(monthView, year, month, day);
         }
+    }
+
+    @Override
+    public void onNextMonthDateSelect(MonthView monthView, int year, int month, int day) {
+        if (mOnSelectListener != null) {
+            mOnSelectListener.onNextMonthDateSelect(monthView, year, month, day);
+        }
+    }
+
+    @Override
+    public void onLayoutChanged(ITopView topView) {
+        if (mOnTopViewChangedListenr != null) mOnTopViewChangedListenr.onLayoutChanged(topView);
     }
 }

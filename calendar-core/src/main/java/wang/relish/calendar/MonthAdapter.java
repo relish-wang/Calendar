@@ -1,5 +1,7 @@
 package wang.relish.calendar;
 
+import android.database.DataSetObservable;
+import android.database.DataSetObserver;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
@@ -14,7 +16,7 @@ public abstract class MonthAdapter {
 
     private MonthStyle mMonthStyle;
 
-    public MonthAdapter(MonthStyle monthStyle) {
+    public MonthAdapter(@NonNull MonthStyle monthStyle) {
         mMonthStyle = monthStyle;
     }
 
@@ -91,4 +93,46 @@ public abstract class MonthAdapter {
     public MonthStyle getMonthStyle() {
         return mMonthStyle;
     }
+
+    private final DataSetObservable mObservable = new DataSetObservable();
+    private DataSetObserver mMonthObserver;
+
+    void setMonthObserver(DataSetObserver observer) {
+        synchronized (this) {
+            mMonthObserver = observer;
+        }
+    }
+
+    /**
+     * This method should be called by the application if the data backing this adapter has changed
+     * and associated views should update.
+     */
+    public void notifyDataSetChanged() {
+        synchronized (this) {
+            if (mMonthObserver != null) {
+                mMonthObserver.onChanged();
+            }
+        }
+        mObservable.notifyChanged();
+    }
+
+    /**
+     * Register an observer to receive callbacks related to the adapter's data changing.
+     *
+     * @param observer The {@link android.database.DataSetObserver} which will receive callbacks.
+     */
+    public void registerDataSetObserver(@NonNull DataSetObserver observer) {
+        setMonthObserver(observer);
+        mObservable.registerObserver(observer);
+    }
+
+    /**
+     * Unregister an observer from callbacks related to the adapter's data changing.
+     *
+     * @param observer The {@link android.database.DataSetObserver} which will be unregistered.
+     */
+    public void unregisterDataSetObserver(@NonNull DataSetObserver observer) {
+        mObservable.unregisterObserver(observer);
+    }
+
 }

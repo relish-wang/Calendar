@@ -11,7 +11,6 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.TintTypedArray;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -33,10 +32,6 @@ import wang.relish.calendar.pager.listener.OnChangeDateListener;
 import wang.relish.calendar.pager.listener.OnChangePageListener;
 import wang.relish.calendar.pager.listener.OnChangeStatusListener;
 import wang.relish.calendar.pager.listener.OnClickBackTodayListener;
-import wang.relish.calendar.pager.viewpager.RecyclerViewPager;
-
-//import wang.relish.calendar.Utils;
-
 
 /**
  * 日历
@@ -127,7 +122,7 @@ public class CalendarView extends LinearLayout {
         mContentRootLayout = mLlRoot.findViewById(R.id.rl_content);
 
         mMPager = mLlRoot.findViewById(R.id.vp_month);
-        mMonthAdapter = new MPagerAdapter(((AppCompatActivity)getContext()).getSupportFragmentManager(),mData, new OnSelectListener() {
+        mMonthAdapter = new MPagerAdapter(((AppCompatActivity) getContext()).getSupportFragmentManager(), mData, new OnSelectListener() {
             @Override
             public void onPrevMonthDateSelect(MonthView monthView, int year, int month, int day) {
                 if (mCurrYear == year && mCurrMonth == month && mCurrDay == day) return;
@@ -141,7 +136,7 @@ public class CalendarView extends LinearLayout {
                     @Override
                     public void run() {
                         isManuallySlided = false;
-                        mMPager.setCurrentItem(currentItem - 1,true);
+                        mMPager.setCurrentItem(currentItem - 1, true);
                     }
                 });
             }
@@ -171,7 +166,7 @@ public class CalendarView extends LinearLayout {
                     @Override
                     public void run() {
                         isManuallySlided = false;
-                        mMPager.setCurrentItem(currentItem + 1,true);
+                        mMPager.setCurrentItem(currentItem + 1, true);
                     }
                 });
             }
@@ -179,7 +174,7 @@ public class CalendarView extends LinearLayout {
 
             @Override
             public int getCurrentPosition() {
-                return currentPosition;
+                return mMPager.getCurrentItem();//currentPosition;
             }
 
             @Override
@@ -203,14 +198,14 @@ public class CalendarView extends LinearLayout {
 
             @Override
             public void onPageSelected(int position) {
-                onPageChanged(currentPosition,position);
+                onPageChanged(currentPosition, position);
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
             }
 
-            public void onPageChanged(int oldPosition, int newPosition) {
+            void onPageChanged(int oldPosition, int newPosition) {
                 if (oldPosition == newPosition) return;
                 currentPosition = newPosition;
                 if (oldPosition == 0) return;// 说明是第一次进来
@@ -345,9 +340,9 @@ public class CalendarView extends LinearLayout {
                 public void run() {
                     isManuallySlided = false;
                     if (isFuture) {
-                        mMPager.setCurrentItem(currentPosition - 2,true);
+                        mMPager.setCurrentItem(currentPosition - 2, true);
                     } else {
-                        mMPager.setCurrentItem(currentPosition + 2,true);
+                        mMPager.setCurrentItem(currentPosition + 2, true);
                     }
                     onChangeDate(getContext(), mCurrYear, mCurrMonth, mCurrDay);
                 }
@@ -369,8 +364,6 @@ public class CalendarView extends LinearLayout {
         mWeekView.setWeekFirstDay(mWeekFirstDay);
         invalidate();
     }
-
-    //以下RN相关
 
     private OnClickBackTodayListener mClickBackTodayListener;
     private OnChangeDateListener mDateListener;

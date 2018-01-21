@@ -8,14 +8,11 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.View;
 
-import wang.relish.calendar.MonthView;
-import wang.relish.calendar.pager.ITopView;
-
 /**
  * @author Relish Wang
  * @since 2018/01/21
  */
-public class MPager extends ViewPager implements ITopView{
+public class MPager extends ViewPager implements ITopView {
 
     public MPager(@NonNull Context context) {
         super(context);
@@ -25,24 +22,40 @@ public class MPager extends ViewPager implements ITopView{
         super(context, attrs);
     }
 
-   private  MPagerAdapter mAdapter;
+    private MPagerAdapter mAdapter;
 
 
-    private  int mItemHeight = -1;
+    private int mItemHeight = -1;
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+        int monthHeight = 0;
+        if (getAdapter() != null) {
+            ITopView view = (ITopView) getChildAt(0);
+            if (view != null) {
+                monthHeight = view.getMeasuredHeight();
+                mItemHeight = view.getItemHeight();
+            }
+        }
+        setMeasuredDimension(widthMeasureSpec, View.MeasureSpec.makeMeasureSpec(monthHeight, View.MeasureSpec.EXACTLY));
+    }
     @Override
     public void setAdapter(@Nullable PagerAdapter adapter) {
         if (adapter instanceof MPagerAdapter) {
             mAdapter = (MPagerAdapter) adapter;
             if (mListener != null) mAdapter.setOnTopViewChangedListener(mListener);
         } else {
-            throw new IllegalArgumentException("MonthPager must set a MonthPagerAdapter: " + adapter);
+            throw new IllegalArgumentException("MonthPager must set a MPagerAdapter: " + adapter);
         }
         super.setAdapter(mAdapter);
     }
 
     @Override
-    public int getItemTop() { View view = getChildAt(0);
-        if (view != null && view instanceof MonthView) {
+    public int getItemTop() {
+        View view = getChildAt(0);
+        if (view != null && view instanceof FoldableMonthView) {
             FoldableMonthView monthView = (FoldableMonthView) view;
             return monthView.getItemTop();
         }

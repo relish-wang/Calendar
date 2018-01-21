@@ -246,7 +246,8 @@ public final class Utils {
     }
 
     public static int getPositionOfDateInMonthView(MonthStyle monthStyle) {
-        return getPositionOfDateInMonthView(monthStyle.getYear(), monthStyle.getMonth(), monthStyle.getIntAttribute("selectDay"), monthStyle.getWeekFirstDay());
+        int selectDay = monthStyle.getIntAttribute(Constant.KEY_SELECTED_DAY, 1);
+        return getPositionOfDateInMonthView(monthStyle.getYear(), monthStyle.getMonth(), selectDay, monthStyle.getWeekFirstDay());
     }
 
     /**

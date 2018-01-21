@@ -34,7 +34,7 @@ public class CalendarActivity extends AppCompatActivity {
         }
 
         CalendarView view = new CalendarView(this);
-        view.setWeekFirstDay(Calendar.THURSDAY);
+        view.setWeekFirstDay(Calendar.SUNDAY);
         view.setData(dateEvents);
         setContentView(view);
     }

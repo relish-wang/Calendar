@@ -30,4 +30,9 @@ public class DefaultAdapter extends MonthAdapter {
     protected void drawAboveDate(Canvas canvas, @NonNull RectF cell, @NonNull DateStyle dateStyle) {
         // do nothing.
     }
+
+    @Override
+    public MonthStyle getMonthStyle() {
+        return super.getMonthStyle();
+    }
 }

@@ -96,9 +96,9 @@ public class DateStyle extends Attributes implements Serializable {
     @Override
     public String toString() {
         return "{" +
-                "\"textColor\":\'" + textColor + "\"," +
+                "\"textColor\":\"" + textColor + "\"," +
                 "\"text\":\"" + text + "\"," +
-                "\"ext\":\"" + ext.toString() + "\"" +
+                "\"ext\":\"" + super.toString() + "\"" +
                 "}";
     }
 }
