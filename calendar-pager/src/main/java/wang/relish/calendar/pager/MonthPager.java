@@ -69,7 +69,7 @@ public class MonthPager extends RecyclerViewPager implements ITopView {
     @Override
     public int getItemHeight() {
         if (mItemHeight != -1) return mItemHeight;
-        View view = getChildAt(getCurrentPosition());
+        View view = getChildAt(getCurrentItem());
         if (view != null && view instanceof FoldableMonthView) {
             FoldableMonthView monthView = (FoldableMonthView) view;
             mItemHeight = monthView.getItemHeight();

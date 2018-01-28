@@ -1,6 +1,7 @@
 package wang.relish.calendar;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Calendar;
 
 /**
@@ -74,4 +75,15 @@ public class MonthStyle extends Attributes implements Serializable {
         this.dateCells = dateCells;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("{");
+        sb.append("\"").append("year").append("\":\"").append(year).append("\",");
+        sb.append("\"").append("month").append("\":\"").append(month).append("\",");
+        sb.append("\"").append("weekFirstDay").append("\":\"").append(weekFirstDay).append("\",");
+        sb.append("\"").append("dateCells").append("\":").append(Arrays.toString(dateCells)).append(",");
+        sb.append("\"").append("ext").append("\":\"").append(super.toString()).append("\"");
+        sb.append("}");
+        return sb.toString();
+    }
 }

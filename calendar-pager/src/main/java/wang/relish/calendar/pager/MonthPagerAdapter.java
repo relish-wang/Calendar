@@ -57,6 +57,7 @@ public class MonthPagerAdapter extends RecyclerViewPager.Adapter<MonthPagerAdapt
 
     public MonthPagerAdapter(Map<String, Integer> data, @NonNull OnSelectListener listener, @NonNull CurrentPositionGetter positionGetter) {
         mData = data;
+        mOnSelectListener = listener;
         mPositionGetter = positionGetter;
 
         Calendar calendar = Calendar.getInstance();

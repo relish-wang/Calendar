@@ -9,8 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.TintTypedArray;
 import android.util.AttributeSet;
@@ -33,7 +31,6 @@ import wang.relish.calendar.pager.listener.OnChangeDateListener;
 import wang.relish.calendar.pager.listener.OnChangePageListener;
 import wang.relish.calendar.pager.listener.OnChangeStatusListener;
 import wang.relish.calendar.pager.listener.OnClickBackTodayListener;
-import wang.relish.calendar.pager.viewpager.RecyclerViewPager;
 
 //import wang.relish.calendar.Utils;
 
@@ -77,11 +74,11 @@ public class CalendarView extends LinearLayout {
      * 数据
      */
     private Map<String, Integer> mData = new HashMap<>();
-    private MPagerAdapter mMonthAdapter;
+    private MonthPagerAdapter mMonthAdapter;
     /**
      * 展示月份的ViewPager
      */
-    private MPager mMPager;
+    private MonthPager mMPager;
 
     protected FrameLayout mContentRootLayout;
 
@@ -127,7 +124,7 @@ public class CalendarView extends LinearLayout {
         mContentRootLayout = mLlRoot.findViewById(R.id.rl_content);
 
         mMPager = mLlRoot.findViewById(R.id.vp_month);
-        mMonthAdapter = new MPagerAdapter(((AppCompatActivity)getContext()).getSupportFragmentManager(),mData, new OnSelectListener() {
+        mMonthAdapter = new MonthPagerAdapter(mData, new OnSelectListener() {
             @Override
             public void onPrevMonthDateSelect(MonthView monthView, int year, int month, int day) {
                 if (mCurrYear == year && mCurrMonth == month && mCurrDay == day) return;
@@ -175,7 +172,7 @@ public class CalendarView extends LinearLayout {
                     }
                 });
             }
-        }, new MPagerAdapter.CurrentPositionGetter() {
+        }, new MonthPagerAdapter.CurrentPositionGetter() {
 
             @Override
             public int getCurrentPosition() {
@@ -193,23 +190,9 @@ public class CalendarView extends LinearLayout {
             }
         });
         mMPager.setAdapter(mMonthAdapter);
-//        mMPager.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        mMPager.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         mMPager.setCurrentItem(Integer.MAX_VALUE >> 1);
-        mMPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                onPageChanged(currentPosition,position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-
+        mMPager.addOnPageChangedListener(new MonthPager.OnPageChangedListener() {
             public void onPageChanged(int oldPosition, int newPosition) {
                 if (oldPosition == newPosition) return;
                 currentPosition = newPosition;

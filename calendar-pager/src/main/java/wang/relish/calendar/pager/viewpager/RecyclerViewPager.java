@@ -186,7 +186,7 @@ public class RecyclerViewPager extends RecyclerView {
         }
 
         if (mPositionBeforeScroll < 0) {
-            mPositionBeforeScroll = getCurrentPosition();
+            mPositionBeforeScroll = getCurrentItem();
         }
         mSmoothScrollTargetPosition = position;
         if (getLayoutManager() != null && getLayoutManager() instanceof LinearLayoutManager) {
@@ -261,12 +261,24 @@ public class RecyclerViewPager extends RecyclerView {
         }
     }
 
+    public void setCurrentItem(int position) {
+        setCurrentItem(position, false);
+    }
+
+    public void setCurrentItem(int position, boolean smoothScorll) {
+        if (smoothScorll) {
+            smoothScrollToPosition(position);
+        } else {
+            scrollToPosition(position);
+        }
+    }
+
     @Override
     public void scrollToPosition(int position) {
         if (DEBUG) {
             Log.d("@", "scrollToPosition:" + position);
         }
-        mPositionBeforeScroll = getCurrentPosition();
+        mPositionBeforeScroll = getCurrentItem();
         mSmoothScrollTargetPosition = position;
         super.scrollToPosition(position);
 
@@ -284,7 +296,7 @@ public class RecyclerViewPager extends RecyclerView {
                     if (mOnPageChangedListeners != null) {
                         for (OnPageChangedListener onPageChangedListener : mOnPageChangedListeners) {
                             if (onPageChangedListener != null) {
-                                onPageChangedListener.onPageChanged(mPositionBeforeScroll, getCurrentPosition());
+                                onPageChangedListener.onPageChanged(mPositionBeforeScroll, getCurrentItem());
                             }
                         }
                     }
@@ -300,7 +312,7 @@ public class RecyclerViewPager extends RecyclerView {
     /**
      * get item position in center of viewpager
      */
-    public int getCurrentPosition() {
+    public int getCurrentItem() {
         int curPosition;
         if (getLayoutManager().canScrollHorizontally()) {
             curPosition = ViewUtils.getCenterXChildPosition(this);
