@@ -2,7 +2,6 @@ package wang.relish.calendar;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.database.DataSetObserver;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -176,16 +175,9 @@ public class MonthView extends View {
         mListener = listener;
     }
 
-    private MonthObserver mObserver;
 
     public void setAdapter(MonthAdapter adapter) {
-        if (adapter != null && mObserver != null) {
-            adapter.unregisterDataSetObserver(mObserver);
-        }
         if (adapter != null) {
-            mObserver = new MonthObserver();
-            adapter.registerDataSetObserver(mObserver);
-
             mAdapter = adapter;
             invalidate();
         }
@@ -204,24 +196,5 @@ public class MonthView extends View {
         } else {
             return mAdapter.getMonthStyle();
         }
-    }
-
-    private class MonthObserver extends DataSetObserver {
-        MonthObserver() {
-        }
-
-        @Override
-        public void onChanged() {
-            dataSetChanged();
-        }
-
-        @Override
-        public void onInvalidated() {
-            dataSetChanged();
-        }
-    }
-
-    void dataSetChanged() {
-        requestLayout();
     }
 }
