@@ -3,27 +3,28 @@ package wang.relish.calendar.pager;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.View;
 
-/**
- * @author Relish Wang
- * @since 2018/01/21
- */
-public class MPager extends ViewPager implements ITopView {
+import wang.relish.calendar.MonthView;
+import wang.relish.calendar.pager.viewpager.RecyclerViewPager;
 
-    public MPager(@NonNull Context context) {
+
+/**
+ * 日历的ViewPager
+ *
+ * @author Relish Wang
+ * @since 2017/11/28
+ */
+public class MonthPager extends RecyclerViewPager implements ITopView {
+
+    public MonthPager(@NonNull Context context) {
         super(context);
     }
 
-    public MPager(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public MonthPager(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
-
-    private MPagerAdapter mAdapter;
-
 
     private int mItemHeight = -1;
 
@@ -41,13 +42,16 @@ public class MPager extends ViewPager implements ITopView {
         }
         setMeasuredDimension(widthMeasureSpec, View.MeasureSpec.makeMeasureSpec(monthHeight, View.MeasureSpec.EXACTLY));
     }
+
+    private MonthPagerAdapter mAdapter;
+
     @Override
-    public void setAdapter(@Nullable PagerAdapter adapter) {
-        if (adapter instanceof MPagerAdapter) {
-            mAdapter = (MPagerAdapter) adapter;
+    public void setAdapter(Adapter adapter) {
+        if (adapter instanceof MonthPagerAdapter) {
+            mAdapter = (MonthPagerAdapter) adapter;
             if (mListener != null) mAdapter.setOnTopViewChangedListener(mListener);
         } else {
-            throw new IllegalArgumentException("MonthPager must set a MPagerAdapter: " + adapter);
+            throw new IllegalArgumentException("MonthPager must set a MonthPagerAdapter: " + adapter);
         }
         super.setAdapter(mAdapter);
     }
@@ -55,7 +59,7 @@ public class MPager extends ViewPager implements ITopView {
     @Override
     public int getItemTop() {
         View view = getChildAt(0);
-        if (view != null && view instanceof FoldableMonthView) {
+        if (view != null && view instanceof MonthView) {
             FoldableMonthView monthView = (FoldableMonthView) view;
             return monthView.getItemTop();
         }
