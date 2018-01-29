@@ -171,20 +171,11 @@ public class RecyclerViewPager extends RecyclerView {
                 adjustPositionY(velocityY);
             }
         }
-
-        if (DEBUG) {
-            Log.d("@", "velocityX:" + velocityX);
-            Log.d("@", "velocityY:" + velocityY);
-        }
         return flinging;
     }
 
     @Override
     public void smoothScrollToPosition(int position) {
-        if (DEBUG) {
-            Log.d("@", "smoothScrollToPosition:" + position);
-        }
-
         if (mPositionBeforeScroll < 0) {
             mPositionBeforeScroll = getCurrentItem();
         }
@@ -499,9 +490,6 @@ public class RecyclerViewPager extends RecyclerView {
                     // While rvp is scrolling, mPositionBeforeScroll will be previous value.
                     mPositionBeforeScroll = getChildLayoutPosition(mCurView);
                     mHasCalledOnPageChanged = false;
-                }
-                if (DEBUG) {
-                    Log.d("@", "mPositionBeforeScroll:" + mPositionBeforeScroll);
                 }
                 mFirstLeftWhenDragging = mCurView.getLeft();
                 mFirstTopWhenDragging = mCurView.getTop();
