@@ -281,12 +281,12 @@ public final class Utils {
     }
 
     /**
-     * 一个MonthView的初始日期
+     * 获取前一个月的最后一行的星期行的第一天的日期
      *
      * @param year         MonthView显示的当前年
      * @param month        MonthView显示的当前月
      * @param weekFirstDay 设定的一周的第一天是周几
-     * @return 如2017, 11, 星期一。返回2017年10月30日
+     * @return 如2017, 11, 星期一。返回2017年10月30日(建议看看日历,更容易理解这个方法)
      */
     public static Calendar getPreMonthTailFirstDate(int year, int month, int weekFirstDay) {
         if (!Utils.isDayCorrect(year, month, 1)) {
@@ -294,6 +294,7 @@ public final class Utils {
         }
         int monthFirstDayDay = Utils.getMonthFirstDayDay(year, month); //日~六： 1~7
         int preDay = monthFirstDayDay - weekFirstDay;
+        if (preDay < 0) preDay += 7;
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month, 1, 0, 0, 0);
         calendar.add(Calendar.DAY_OF_MONTH, -preDay);
@@ -301,12 +302,12 @@ public final class Utils {
     }
 
     /**
-     * 一个MonthView的初始日期
+     * 获取下一个月的第一行的星期行的第一天的日期
      *
      * @param year         MonthView显示的当前年
      * @param month        MonthView显示的当前月
      * @param weekFirstDay 设定的一周的第一天是周几
-     * @return 如2017, 11, 星期一。返回2017年10月30日
+     * @return 如2017, 11, 星期一。返回2017年11月27日(建议看看日历,更容易理解这个方法)
      */
     private static Calendar getNextMonthHeadLastDate(int year, int month, int weekFirstDay) {
         if (!Utils.isDayCorrect(year, month, 1)) {
