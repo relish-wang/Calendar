@@ -25,9 +25,6 @@ import wang.relish.calendar.core.BuildConfig;
 
 /**
  * RecyclerViewPager
- *
- * @author wangxin
- * @since 2017/12/1
  */
 public class RecyclerViewPager extends RecyclerView {
     public static final boolean DEBUG = BuildConfig.DEBUG;

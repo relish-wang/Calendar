@@ -3,10 +3,6 @@ package wang.relish.calendar.pager.viewpager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-/**
- * @author wangxin
- * @since 2017/12/1
- */
 class ViewUtils {
 
     /**

@@ -113,6 +113,7 @@ public class MonthView extends View {
 
             //异常坐标
             if (cellX < 0 || cellX > 7 || cellY < 0 || cellY > 6) return true;
+            if (Utils.isFastDoubleClick(new Point(cellX, cellY))) return true;
 
             MonthStyle monthStyle = getMonthStyle();
             int currYear = monthStyle.getYear();

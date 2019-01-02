@@ -23,6 +23,8 @@ import com.orhanobut.logger.Logger;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import wang.relish.calendar.MonthView;
 import wang.relish.calendar.OnSelectListener;
@@ -31,9 +33,6 @@ import wang.relish.calendar.pager.listener.OnChangeDateListener;
 import wang.relish.calendar.pager.listener.OnChangePageListener;
 import wang.relish.calendar.pager.listener.OnChangeStatusListener;
 import wang.relish.calendar.pager.listener.OnClickBackTodayListener;
-
-//import wang.relish.calendar.Utils;
-
 
 /**
  * 日历
@@ -138,7 +137,7 @@ public class CalendarView extends LinearLayout {
                     @Override
                     public void run() {
                         isManuallySlided = false;
-                        mMPager.setCurrentItem(currentItem - 1,true);
+                        mMPager.setCurrentItem(currentItem - 1, true);
                     }
                 });
             }
@@ -168,7 +167,7 @@ public class CalendarView extends LinearLayout {
                     @Override
                     public void run() {
                         isManuallySlided = false;
-                        mMPager.setCurrentItem(currentItem + 1,true);
+                        mMPager.setCurrentItem(currentItem + 1, true);
                     }
                 });
             }
@@ -197,28 +196,33 @@ public class CalendarView extends LinearLayout {
                 if (oldPosition == newPosition) return;
                 currentPosition = newPosition;
                 if (oldPosition == 0) return;// 说明是第一次进来
-                @Dir int dir = oldPosition - newPosition > 0
+                @Dir final int dir = oldPosition - newPosition > 0
                         ? Dir.LEFT :
                         Dir.RIGHT;
                 stage = mCalendarLayout.getStage();
 
-                if (isManuallySlided) {
-                    //手指滑动
-                    Calendar nextFocusDate = Utils.getNextFocusDate(dir, stage, mCurrYear, mCurrMonth, mCurrDay, mWeekFirstDay);
-                    mCurrYear = nextFocusDate.get(Calendar.YEAR);
-                    mCurrMonth = nextFocusDate.get(Calendar.MONTH);
-                    mCurrDay = nextFocusDate.get(Calendar.DAY_OF_MONTH);
-                    onChangeDate(getContext(), mCurrYear, mCurrMonth, mCurrDay);
-                } else {
-                    isManuallySlided = true;
-                }
-                if (mOnChangePageListener != null) {
-                    mOnChangePageListener.onChangePage(getContext(), mCurrYear, mCurrMonth, mCurrDay);
-                }
-                mMPager.post(new Runnable() {
+                WorkQueue.getInstance().execute(new Runnable() {
                     @Override
                     public void run() {
-                        mMonthAdapter.selectDate(mCurrYear, mCurrMonth, mCurrDay);
+                        if (isManuallySlided) {
+                            //手指滑动
+                            Calendar nextFocusDate = Utils.getNextFocusDate(dir, stage, mCurrYear, mCurrMonth, mCurrDay, mWeekFirstDay);
+                            mCurrYear = nextFocusDate.get(Calendar.YEAR);
+                            mCurrMonth = nextFocusDate.get(Calendar.MONTH);
+                            mCurrDay = nextFocusDate.get(Calendar.DAY_OF_MONTH);
+                            onChangeDate(getContext(), mCurrYear, mCurrMonth, mCurrDay);
+                        } else {
+                            isManuallySlided = true;
+                        }
+                        if (mOnChangePageListener != null) {
+                            mOnChangePageListener.onChangePage(getContext(), mCurrYear, mCurrMonth, mCurrDay);
+                        }
+                        mMPager.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                mMonthAdapter.selectDate(mCurrYear, mCurrMonth, mCurrDay);
+                            }
+                        });
                     }
                 });
             }
@@ -328,9 +332,9 @@ public class CalendarView extends LinearLayout {
                 public void run() {
                     isManuallySlided = false;
                     if (isFuture) {
-                        mMPager.setCurrentItem(currentPosition - 2,true);
+                        mMPager.setCurrentItem(currentPosition - 2, true);
                     } else {
-                        mMPager.setCurrentItem(currentPosition + 2,true);
+                        mMPager.setCurrentItem(currentPosition + 2, true);
                     }
                     onChangeDate(getContext(), mCurrYear, mCurrMonth, mCurrDay);
                 }
@@ -383,6 +387,30 @@ public class CalendarView extends LinearLayout {
         }
         if (mDateListener != null) {
             mDateListener.onChangeDate(context, year, month + 1, day);
+        }
+    }
+
+    public static class WorkQueue {
+        private static volatile WorkQueue INSTANCE = null;
+        private final ExecutorService singleExecutor = Executors.newSingleThreadExecutor();
+
+        public static WorkQueue getInstance() {
+            if (INSTANCE == null) {
+                synchronized (WorkQueue.class) {
+                    if (INSTANCE == null) {
+                        INSTANCE = new WorkQueue();
+                    }
+                }
+            }
+
+            return INSTANCE;
+        }
+
+        private WorkQueue() {
+        }
+
+        public void execute(Runnable work) {
+            this.singleExecutor.execute(work);
         }
     }
 }

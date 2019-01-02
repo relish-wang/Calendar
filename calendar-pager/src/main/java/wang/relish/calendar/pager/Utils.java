@@ -1,6 +1,9 @@
 package wang.relish.calendar.pager;
 
 import android.content.res.Resources;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 
 import java.util.Calendar;
 import java.util.Locale;

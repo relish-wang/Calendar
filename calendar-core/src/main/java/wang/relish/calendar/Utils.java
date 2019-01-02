@@ -2,6 +2,8 @@ package wang.relish.calendar;
 
 import android.content.Context;
 import android.graphics.Point;
+import android.graphics.Rect;
+import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Display;
@@ -371,6 +373,33 @@ public final class Utils {
         boolean isDivideExactly = (monthDayCount + preMonthTailDayCount) % 7 == 0;
         int row = (monthDayCount + preMonthTailDayCount) / 7;
         return isDivideExactly ? row : row + 1;
+    }
+
+
+    private static Point mLatestClickedPoint;
+    private static long mLatestClickedTime = -1;
+
+    /**
+     * 判断是否异常的双击（300毫秒内不能点击不同控件，500毫秒内不能点击相同控件）
+     */
+    public static boolean isFastDoubleClick(@NonNull Point point) {
+        final long now = System.currentTimeMillis();
+        if (mLatestClickedPoint == null) {
+            mLatestClickedPoint = point;
+            mLatestClickedTime = now;
+            return false;
+        }
+        final long interval = now - mLatestClickedTime;
+        if (mLatestClickedPoint.equals(point) && interval < 300) {
+            mLatestClickedTime = now;
+            return true;
+        }
+        if (!mLatestClickedPoint.equals(point) && interval < 500) {
+            mLatestClickedPoint = point;
+            mLatestClickedTime = now;
+            return true;
+        }
+        return false;
     }
 
 //    /**

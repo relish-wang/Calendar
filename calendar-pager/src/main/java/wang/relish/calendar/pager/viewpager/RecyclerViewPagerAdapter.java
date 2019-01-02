@@ -8,9 +8,6 @@ import android.view.ViewGroup;
 /**
  * RecyclerViewPagerAdapter </br>
  * Adapter wrapper.
- *
- * @author wangxin
- * @since 2017/12/1
  */
 public class RecyclerViewPagerAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
     private final RecyclerViewPager mViewPager;

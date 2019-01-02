@@ -3,16 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Calendar.iml" filepath="$PROJECT_DIR$/Calendar.iml" />
-      <module fileurl="file://$PROJECT_DIR$/sample/app.iml" filepath="$PROJECT_DIR$/sample/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/calendar-core/calendar-core.iml" filepath="$PROJECT_DIR$/calendar-core/calendar-core.iml" />
-      <module fileurl="file://$PROJECT_DIR$/calendar-pager/calendar-pager.iml" filepath="$PROJECT_DIR$/calendar-pager/calendar-pager.iml" />
-      <module fileurl="file://$PROJECT_DIR$/calendar-pager-rn/calendar-pager-rn.iml" filepath="$PROJECT_DIR$/calendar-pager-rn/calendar-pager-rn.iml" />
-      <module fileurl="file://$PROJECT_DIR$/calendar-picker/calendar-picker.iml" filepath="$PROJECT_DIR$/calendar-picker/calendar-picker.iml" />
-      <module fileurl="file://$PROJECT_DIR$/calendar-pager-rn/calendarview-rn.iml" filepath="$PROJECT_DIR$/calendar-pager-rn/calendarview-rn.iml" />
-      <module fileurl="file://$PROJECT_DIR$/calendar-picker/daterangepicker.iml" filepath="$PROJECT_DIR$/calendar-picker/daterangepicker.iml" />
-      <module fileurl="file://$PROJECT_DIR$/daterangepicker/librady.iml" filepath="$PROJECT_DIR$/daterangepicker/librady.iml" />
-      <module fileurl="file://$PROJECT_DIR$/calendar-core/monthview.iml" filepath="$PROJECT_DIR$/calendar-core/monthview.iml" />
-      <module fileurl="file://$PROJECT_DIR$/sample/sample.iml" filepath="$PROJECT_DIR$/sample/sample.iml" />
     </modules>
   </component>
 </project>
